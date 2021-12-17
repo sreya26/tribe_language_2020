@@ -1,0 +1,525 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}plog_780
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/1.04b_edu_religion_1961_merge.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}16 Nov 2021, 12:34:28
+{txt}
+{com}.         
+. project, uses("../08_temp/census1961_st_edu_data.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"08_temp/census1961_st_edu_data.dta" filesig(2802879694:4878559){txt}
+
+{com}. project, uses("../08_temp/census1961_st_edu_distcoded.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"08_temp/census1961_st_edu_distcoded.dta" filesig(1638760597:4223350){txt}
+
+{com}. project, uses("../08_temp/census1961_st_religion_data.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"08_temp/census1961_st_religion_data.dta" filesig(919938569:5810751){txt}
+
+{com}. project, uses("../08_temp/census1961_st_agg_religion_distcoded.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"08_temp/census1961_st_agg_religion_distcoded.dta" filesig(4104511838:5826680){txt}
+
+{com}. 
+.         ******************************************************************************************************
+.         * SECTION I : error checks of 1961 education data before attempting merge with religion file 
+.         ******************************************************************************************************
+.         
+.         ******************************************************************************************************
+.         * Gender wise totals 
+.         ******************************************************************************************************
+.         
+.         use "../08_temp/census1961_st_edu_data.dta", clear
+{txt}
+{com}.         
+.         local gender f m 
+{txt}
+{com}.         
+.         
+.         foreach x of local gender {c -(}
+{txt}  2{com}.                 ds *`x'
+{txt}  3{com}.                 local vars `r(varlist)'
+{txt}  4{com}.                 local exclude total`x'
+{txt}  5{com}.                 local vars: list vars - exclude
+{txt}  6{com}.                 egen double tot`x' = rowtotal(`vars')
+{txt}  7{com}.                 assert tot`x' == total`x'
+{txt}  8{com}.         {c )-}
+{txt}{col 1}totalf{col 15}illiteratef{col 29}literateno~f{col 43}primaryf{col 57}matricf
+{col 1}totalm{col 15}illiteratem{col 29}literateno~m{col 43}primarym{col 57}matricm
+
+{com}.         
+.         * checks out
+.         
+.         ******************************************************************************************************
+.         * Changes in string name as applied in 1.10b 
+.         ******************************************************************************************************
+. 
+.         
+. 
+.         replace district = "Manipur" if district == "Imphal Town" // fixing urban tables of Manipur
+{txt}(24 real changes made)
+
+{com}.         replace district = "Imphal East" if district == "Imphal Town Part Of Imphal East"
+{txt}(11 real changes made)
+
+{com}.         replace district = "Imphal West" if district == "Imphal Town Part Of Imphal West"
+{txt}(24 real changes made)
+
+{com}. 
+.         replace district = subinstr(district,"Sub Division","Sub-Division",1) if state == "Tripura"
+{txt}(182 real changes made)
+
+{com}. 
+.         drop if strpos(tribe,"aggregate")>0
+{txt}(10 observations deleted)
+
+{com}. 
+.         ******************************************************************************************************
+.         * Checking whether sum of individual tribes sum to all scheduled tribes total 
+.         ******************************************************************************************************
+. 
+.         tempfile master
+{txt}
+{com}.         save `master'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_00324.000008{rm}
+saved
+as .dta format
+{p_end}
+
+{com}.         
+.         gen byte weight = 1 if strpos(tribe,"all scheduled tribes")>0
+{txt}(6,017 missing values generated)
+
+{com}.         replace weight = -1 if missing(weight)
+{txt}(6,017 real changes made)
+
+{com}.         
+.         foreach var of varlist totalm-matricf  {c -(}
+{txt}  2{com}.                 egen `var'_error = total(`var'*weight), by (state district area)
+{txt}  3{com}.                 assert `var'_error == 0 if !inlist(state,"Himachal Pradesh", "Manipur", "Laccadive, Minicoy and Amindivi Islands" )
+{txt}  4{com}.                 // these states do not include all scheduled tribes obs 
+.         {c )-}
+{txt}
+{com}.         
+.         *************************************************************************************************************************
+.         * check to see whether districts within a division sum up to the division obs
+.         *************************************************************************************************************************
+.         
+.         keep if division_code > 0 & !missing(division_code) | sub_division_code > 0 & !missing(sub_division_code)
+{txt}(2,897 observations deleted)
+
+{com}. 
+.         
+.         gen byte weight_div = 1 if strpos(district,"Division")>0
+{txt}(2,696 missing values generated)
+
+{com}.         replace weight_div = -1 if missing(weight_div)
+{txt}(2,696 real changes made)
+
+{com}.         
+.         foreach var of varlist totalm-matricf {c -(}
+{txt}  2{com}.                 egen `var'_error_div = total(`var'*weight_div), by (state division_code tribe area)
+{txt}  3{com}.                 assert `var'_error_div == 0 if state != "Manipur" & state != "Tripura" //manipur and tripura only have sub divisions
+{txt}  4{com}.         {c )-}
+{txt}
+{com}.         
+.         
+.         *************************************************************************************************************************
+.         ** only for manipur mao and sadar hills observations and tripura sub-divisions
+.         *************************************************************************************************************************
+.         
+.         keep if state == "Manipur" | state == "Tripura"
+{txt}(3,266 observations deleted)
+
+{com}.         
+.         gen byte weight_sub = 1 if district == "Mao & Sadar Hills" | district == "Tripura"
+{txt}(371 missing values generated)
+
+{com}.         replace weight_sub = -1 if district == "Mao" | district == "Sadar Hills" | strpos(tribe,"Sub-Division")>0  
+{txt}(27 real changes made)
+
+{com}.         
+.         foreach var of varlist totalm-matricf {c -(}
+{txt}  2{com}.                 egen `var'_error_sub = total(`var'*weight_sub), by (state sub_division_code tribe area)
+{txt}  3{com}.                 assert `var'_error_sub == 0
+{txt}  4{com}.         {c )-}
+{txt}
+{com}.         
+.         * checks out
+. 
+.         ******************************************************************************************************
+.         * Changes to edu dist code data as applied in 1.10b
+.         ******************************************************************************************************
+. 
+.         use "../08_temp/census1961_st_edu_distcoded.dta", clear
+{txt}
+{com}.         
+.         * some regions have no entry for "all scheduled tribes". we now fix this.
+.         preserve
+{txt}
+{com}.                 egen tribe_all = max(tribe == "all scheduled tribes"), by(dcode_1961 area)
+{txt}
+{com}.                 keep if tribe_all == 0
+{txt}(5,306 observations deleted)
+
+{com}.                 assert strpos(tribe,"aggregate") == 0 
+{txt}
+{com}.         
+.                 collapse (sum) totalm-matricf, by(dcode_1961 state_1961 district_1961 area_1961 pop_1961 area)
+{res}{txt}
+{com}.                 gen tribe = "all scheduled tribes"
+{txt}
+{com}.                 tempfile missing_tribe_all
+{txt}
+{com}.                 save `missing_tribe_all'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_00324.00000a{rm}
+saved
+as .dta format
+{p_end}
+
+{com}.         restore
+{txt}
+{com}. 
+.         append using `missing_tribe_all'
+{txt}{p 0 7 2}
+(variable
+{bf:totalm} was {bf:long}, now {bf:double} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalf} was {bf:long}, now {bf:double} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratem} was {bf:long}, now {bf:double} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratef} was {bf:long}, now {bf:double} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:long}, now {bf:double} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:long}, now {bf:double} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:long}, now {bf:double} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:long}, now {bf:double} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricm} was {bf:int}, now {bf:double} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:int}, now {bf:double} to accommodate using data's values)
+{p_end}
+
+{com}.         drop if strpos(tribe,"aggregate")>0
+{txt}(10 observations deleted)
+
+{com}.         
+.         ******************************************************************************************************
+.         * Checking whether district wise tribe totals sum up to their respective state values
+.         ******************************************************************************************************
+.         
+.         gen is_state = mod(dcode_1961,100)
+{txt}
+{com}.         replace is_state = -1 if is_state == 0
+{txt}(936 real changes made)
+
+{com}.         replace is_state = 1 if is_state >0
+{txt}(4,320 real changes made)
+
+{com}.         
+.         foreach var of varlist totalm-matricf {c -(}
+{txt}  2{com}.                 by state_1961 area tribe, sort: egen `var'_error = total(`var'*is_state) 
+{txt}  3{com}.                 assert `var'_error == 0
+{txt}  4{com}.         {c )-}
+{txt}
+{com}.          
+.         * checks out
+. 
+.         ******************************************************************************************************
+.         * Checking whether total m and f matches across edu and religion data 
+.         ******************************************************************************************************
+.         
+.         ******************************************************************************************************
+.         ** preparing the education dataset 
+.         ******************************************************************************************************
+.         
+.         use `master', clear 
+{txt}
+{com}.         replace district = island if state == "Laccadive, Minicoy and Amindivi Islands" // the religion files retain the island names as the district names
+{txt}(11 real changes made)
+
+{com}.         replace district = "Laccadive, Minicoy and Amindivi Islands" if island == "all" & state == "Laccadive, Minicoy and Amindivi Islands"
+{txt}(1 real change made)
+
+{com}.         drop island 
+{txt}
+{com}.         
+.         
+.         ** correcting discrepancies across string names for divisions 
+.         
+.         replace district = "Bilas Division" if district == "Bilaspur Division" & state == "Madhya Pradesh"
+{txt}(56 real changes made)
+
+{com}.         replace district = "Chota Nagpur Division" if district == "Chotanagpur Division"
+{txt}(62 real changes made)
+
+{com}.         replace district = "Dharmanagar Sub-Division" if district == "Dharamanagar Sub-Division"
+{txt}(21 real changes made)
+
+{com}.         replace district = "Khowai Sub-Division" if district == "Keowai Sub-Division"
+{txt}(15 real changes made)
+
+{com}.         replace district = subinstr(district,"Island","Islands",1) if state == "Andaman & Nicobar Islands" & district != "Andaman & Nicobar Islands"
+{txt}(9 real changes made)
+
+{com}.         
+. 
+.         keep state district tribe area totalm totalf illiteratem illiteratef literatenoedm literatenoedf primarym primaryf matricm matricf
+{txt}
+{com}.         
+.         tempfile edu
+{txt}
+{com}.         save `edu'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_00324.00000b{rm}
+saved
+as .dta format
+{p_end}
+
+{com}.         
+.         ******************************************************************************************************
+.         ** preparing the religion dataset
+.         ******************************************************************************************************
+.         
+.         use "../08_temp/census1961_st_religion_data.dta", clear
+{txt}
+{com}.         
+.         replace district = "Imphal East" if district == "Imphal Town part of Imphal East"
+{txt}(12 real changes made)
+
+{com}.         replace district = "Imphal West" if district == "Imphal Town part of Imphal West"
+{txt}(25 real changes made)
+
+{com}.         
+.         ** We already retain Manipur Urban observations which correspond to those of Imphal Town, hence the latter is redundant
+.         drop if district == "Imphal Town"
+{txt}(25 observations deleted)
+
+{com}.         drop if state == "Laccadive, Minicoy and Amindivi Islands" & tribe == "all scheduled tribes" //this is only there in religion data 
+{txt}(11 observations deleted)
+
+{com}.                 
+.         drop if area == "total" // retaining only rural and urban obs for MP
+{txt}(49 observations deleted)
+
+{com}.         
+.         drop if strpos(tribe,"aggregate")>0 // gets rid of the tribe groupings in Maharashtra
+{txt}(10 observations deleted)
+
+{com}.         
+.         
+.         ******************************************************************************************************
+.         * SECTION II : MERGING EDUCATION AND RELIGION DATA 
+.         ******************************************************************************************************
+.         
+.         ******************************************************************************************************
+.         ** Merging the edu and religion data 
+.         ******************************************************************************************************
+.         
+.         merge 1:1 district tribe area using `edu'
+{res}
+{txt}{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}              29
+{txt}{col 9}from master{col 30}{res}              29{txt}  (_merge==1)
+{col 9}from using{col 30}{res}               0{txt}  (_merge==2)
+
+{col 5}Matched{col 30}{res}           6,554{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}.         
+.         
+.         assert inlist(state,"Manipur","Himachal Pradesh", "Laccadive, Minicoy and Amindivi Islands") & ///
+>                                         inlist(tribe,"all scheduled tribes") ///
+>                                         if _merge == 1
+{txt}
+{com}.                                         
+.         drop if _merge == 1
+{txt}(29 observations deleted)
+
+{com}.         
+.         assert total_m == totalm
+{txt}
+{com}.         assert total_f == totalf
+{txt}
+{com}.         
+.         
+.         ******************************************************************************************************
+.         ** Merging the distcoded edu and religion dataset 
+.         ******************************************************************************************************
+.         
+.         use "../08_temp/census1961_st_edu_distcoded.dta", clear
+{txt}
+{com}.         
+.         expand 2 if inlist(dcode_1961,601109,601322,601337,601415,601418,602000,602700,602701), gen(dist_obs) //these district have no urban obs as populations are zero 
+{txt}(63 observations created)
+
+{com}.         replace area = "urban" if dist_obs      
+{txt}(63 real changes made)
+
+{com}.         
+.         foreach var of varlist totalm-matricf {c -(}
+{txt}  2{com}.                 replace `var' = 0 if dist_obs
+{txt}  3{com}.         {c )-}
+{txt}(60 real changes made)
+(56 real changes made)
+(59 real changes made)
+(56 real changes made)
+(46 real changes made)
+(26 real changes made)
+(26 real changes made)
+(15 real changes made)
+(12 real changes made)
+(4 real changes made)
+
+{com}.         
+.         drop dist_obs
+{txt}
+{com}. 
+.         
+.         preserve
+{txt}
+{com}.                 egen tribe_all = max(tribe == "all scheduled tribes"), by(dcode_1961 area)
+{txt}
+{com}.                 keep if tribe_all == 0
+{txt}(5,369 observations deleted)
+
+{com}.                 assert strpos(tribe,"aggregate") == 0 
+{txt}
+{com}.                 * none of the tribe aggregates are present in these areas, else we would have had to get rid of them before the collapse below
+.                 collapse (sum) totalm-matricf, by(dcode_1961 state_1961 district_1961 area_1961 pop_1961 area)
+{res}{txt}
+{com}.                 gen tribe = "all scheduled tribes"
+{txt}
+{com}.                 tempfile missing_tribe_all
+{txt}
+{com}.                 save `missing_tribe_all'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_00324.00000d{rm}
+saved
+as .dta format
+{p_end}
+
+{com}.         restore
+{txt}
+{com}.         
+. 
+.         append using `missing_tribe_all'
+{txt}{p 0 7 2}
+(variable
+{bf:totalm} was {bf:long}, now {bf:double} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalf} was {bf:long}, now {bf:double} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratem} was {bf:long}, now {bf:double} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratef} was {bf:long}, now {bf:double} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:long}, now {bf:double} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:long}, now {bf:double} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:long}, now {bf:double} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:long}, now {bf:double} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricm} was {bf:int}, now {bf:double} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:int}, now {bf:double} to accommodate using data's values)
+{p_end}
+
+{com}.         
+.         rename totalm total_m
+{res}{txt}
+{com}.         rename totalf total_f 
+{res}{txt}
+{com}.         
+.         
+. 
+.         merge 1:1 dcode_1961 tribe area total_m total_f using "../08_temp/census1961_st_agg_religion_distcoded.dta", assert(match) 
+{res}
+{txt}{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}               0
+{txt}{col 5}Matched{col 30}{res}           5,695{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}.         
+.         drop state district 
+{txt}
+{com}.         replace tribe_code = 196109500 if state_1961 == "Himachal Pradesh" & tribe == "all scheduled tribes"
+{txt}(13 real changes made)
+
+{com}.         replace tribe_code = 196115500 if state_1961 == "Manipur" & tribe == "all scheduled tribes"
+{txt}(14 real changes made)
+
+{com}.         
+.         drop _merge 
+{txt}
+{com}.         
+.         
+.         save "../08_temp/census_1961_edu_religion_merged", replace
+{txt}{p 0 4 2}
+file {bf}
+../08_temp/census_1961_edu_religion_merged.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. project, creates("../08_temp/census_1961_edu_religion_merged.dta")
+{txt}project version2_tribe_language > do-file creates: {res}"08_temp/census_1961_edu_religion_merged.dta" filesig(2521991509:5955810){txt}
+
+{com}.         
+. 
+{txt}end of do-file
+      name:  {res}plog_780
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/1.04b_edu_religion_1961_merge.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}16 Nov 2021, 12:34:29
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

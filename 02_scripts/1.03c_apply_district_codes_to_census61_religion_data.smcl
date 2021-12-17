@@ -1,0 +1,289 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}plog_870
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/1.03c_apply_district_codes_to_census61_religion_data.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}16 Nov 2021, 12:34:27
+{txt}
+{com}. 
+. 
+. local parentfile_1961_2011 "../01_data/census_boundaries_data/District Boundary Changes 1961-2011.xlsx"
+{txt}
+{com}. 
+. project , original("`parentfile_1961_2011'")
+{txt}project version2_tribe_language > do-file uses original: {res}"01_data/census_boundaries_data/District Boundary Changes 1961-2011.xlsx" filesig(262706738:905247){txt}
+
+{com}. project , uses("../08_temp/census1961_st_religion_data.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"08_temp/census1961_st_religion_data.dta" filesig(919938569:5810751){txt}
+
+{com}. project , uses("../08_temp/census1961_agg_religion_data_distcoded.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"08_temp/census1961_agg_religion_data_distcoded.dta" filesig(2978714029:88140){txt}
+
+{com}. 
+. ************************************************************************************************************************
+. * 1. import list of 1961 states and districts with codes 
+. ************************************************************************************************************************
+. 
+.         import excel using "`parentfile_1961_2011'", sheet("census1961") firstrow case(lower) clear     
+{res}{text}(5 vars, 376 obs)
+
+{com}.         rename *1961 *_1961
+{res}{txt}
+{com}.         
+.         tempfile census_1961
+{txt}
+{com}.         save `census_1961'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_00324.000008{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+. ************************************************************************************************************************
+. * 2. fix states and districts in 1961 ST education data, and give them location codes 
+. ************************************************************************************************************************
+.         
+.         use "../08_temp/census1961_st_religion_data.dta", clear
+{txt}
+{com}.   
+. 
+.         replace district = subinstr(district,"Sub Division","Sub-Division",1) if state == "Tripura"
+{txt}(0 real changes made)
+
+{com}.         
+.         rename state state_1961
+{res}{txt}
+{com}.         rename district district_1961
+{res}{txt}
+{com}.         
+.         drop if strpos(district_1961," Division")>0
+{txt}(786 observations deleted)
+
+{com}.         
+.         replace district_1961 = "Imphal East" if district_1961 == "Imphal Town part of Imphal East"
+{txt}(12 real changes made)
+
+{com}.         replace district_1961 = "Imphal West" if district_1961 == "Imphal Town part of Imphal West"
+{txt}(25 real changes made)
+
+{com}.         
+. 
+.         * there is no point keeping those areas of Andamans, Lakshadweep, Tripura and Manipur that are not "districts" in our district-boundaries data
+.         drop if district_1961~= "Andaman & Nicobar Islands" & state_1961 == "Andaman & Nicobar Islands"
+{txt}(9 observations deleted)
+
+{com}.         drop if district_1961~= "Tripura" & state_1961 == "Tripura"
+{txt}(182 observations deleted)
+
+{com}.         drop if inlist(district_1961,"Imphal Town") & state_1961 == "Manipur"
+{txt}(25 observations deleted)
+
+{com}.         drop if inlist(district_1961,"Mao","Sadar Hills") & state_1961 == "Manipur"
+{txt}(29 observations deleted)
+
+{com}.         drop if district_1961 ~= "Laccadive, Minicoy and Amindivi Islands" & state_1961 == "Laccadive, Minicoy and Amindivi Islands"
+{txt}(20 observations deleted)
+
+{com}.         
+. 
+.         * for A&N, Tripura, Dadra & Nagar Haveli, Lakshadweep we need to create a new "district" [same as the state]
+.         expand 2 if inlist(state_1961,"Andaman & Nicobar Islands", "Tripura", "Dadra and Nagar Haveli", "Laccadive, Minicoy and Amindivi Islands"), gen(dist_obs)
+{txt}(47 observations created)
+
+{com}.         replace district_1961 = district_1961 + " District" if dist_obs
+{txt}variable {bf}{res}district_1961{sf}{txt} was {bf}{res}str39{sf}{txt} now {bf}{res}str48{sf}
+{txt}(47 real changes made)
+
+{com}.         replace dcode = dcode + 1 if dist_obs   
+{txt}(47 real changes made)
+
+{com}.         drop dist_obs  
+{txt}
+{com}.         
+.         * religion files had a dcode variable originally, checking its validity
+.         
+.         merge m:1 state_1961 district_1961 using `census_1961', assert(match using)
+{res}
+{txt}{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}             109
+{txt}{col 9}from master{col 30}{res}               0{txt}  (_merge==1)
+{col 9}from using{col 30}{res}             109{txt}  (_merge==2)
+
+{col 5}Matched{col 30}{res}           5,674{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. 
+.         assert inlist(state_1961,"Delhi","Goa, Daman and Diu", "Jammu & Kashmir", "North East Frontier Agency", ///
+>                                         "Pondicherry", "Punjab", "Sikkim", "Uttar Pradesh") | ///
+>                                         inlist(district_1961,"Akola","Bhandara","Buldhana","Nagpur","Wardha","Damoh","Sagar") ///
+>                                         if _merge == 2 
+{txt}
+{com}.                                         
+.         * these were areas where either STs were not delimited in 1961, or the full census was not conducted, or no STs were present in 1961
+.         
+.         keep if _merge == 3
+{txt}(109 observations deleted)
+
+{com}.         
+.         assert dcode == dcode_1961 if state_1961 != "Manipur"
+{txt}
+{com}.         drop  _merge dcode is_not_division sort_order
+{txt}
+{com}.                 
+.         order dcode_1961 division_code sub_division_code island_code state_1961 district_1961 area_1961 pop_1961 tribe_code tribe area
+{txt}
+{com}.         drop if area == "total" //MP irrelevant
+{txt}(42 observations deleted)
+
+{com}. 
+.         compress
+{txt}  (0 bytes saved)
+
+{com}. 
+.         save "../08_temp/census1961_st_religion_distcoded", replace
+{txt}{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_religion_distcoded.dta{rm}
+saved
+{p_end}
+
+{com}.         
+. ************************************************************************************************************************
+. * 3. merging in the agg religion data 
+. ************************************************************************************************************************
+.         
+.         use "../08_temp/census1961_st_religion_distcoded", clear
+{txt}
+{com}.         
+.         ** generating urban observations for districts with 0 urban popn to facilitate merge with agg data 
+.         
+.         expand 2 if inlist(dcode_1961,601109,601322,601337,601415,601418,602000,602700,602701), gen(dist_obs) //these district have no urban obs as populations are zero 
+{txt}(63 observations created)
+
+{com}.         replace area = "urban" if dist_obs      
+{txt}(63 real changes made)
+
+{com}.         
+.         foreach var of varlist total_p-indefinite_belief_f {c -(}
+{txt}  2{com}.                 replace `var' = 0 if dist_obs
+{txt}  3{com}.         {c )-}
+{txt}(63 real changes made)
+(60 real changes made)
+(56 real changes made)
+(2 real changes made)
+(6 real changes made)
+(0 real changes made)
+(0 real changes made)
+(8 real changes made)
+(8 real changes made)
+(50 real changes made)
+(46 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(4 real changes made)
+(4 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(10 real changes made)
+(10 real changes made)
+
+{com}.         
+.         drop dist_obs
+{txt}
+{com}.         
+.         merge m:1 dcode_1961 area using "../08_temp/census1961_agg_religion_data_distcoded.dta", assert(match)
+{res}
+{txt}{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}               0
+{txt}{col 5}Matched{col 30}{res}           5,695{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}.                 
+.         
+.         drop _merge
+{txt}
+{com}.         
+.         save "../08_temp/census1961_st_agg_religion_distcoded", replace
+{txt}{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_agg_religion_distcoded.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. 
+.         
+.         project , creates("../08_temp/census1961_st_religion_distcoded.dta")
+{txt}project version2_tribe_language > do-file creates: {res}"08_temp/census1961_st_religion_distcoded.dta" filesig(821515967:5016107){txt}
+
+{com}.         project , creates("../08_temp/census1961_st_agg_religion_distcoded.dta")
+{txt}project version2_tribe_language > do-file creates: {res}"08_temp/census1961_st_agg_religion_distcoded.dta" filesig(4104511838:5826680){txt}
+
+{com}.         
+. 
+{txt}end of do-file
+      name:  {res}plog_870
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/1.03c_apply_district_codes_to_census61_religion_data.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}16 Nov 2021, 12:34:28
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

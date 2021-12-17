@@ -1,0 +1,152 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}plog_812
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/1.14a_code_scheduled_tribal_areas.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 6 Sep 2021, 20:44:57
+{txt}
+{com}. *********************************************************************************************************************
+. * this file creates a variable that denotes whether a (1961-2013) consistent region is
+. * a Scheduled Area (i.e. under the Fifth Schedule) or a Tribal Area (i.e. under the Sixth Schedule) as per the Constitution of India
+. *! version 1.0 created by Hemanshu Kumar on 22 July 2020 
+. * updated from 2017 version by adapting for Census 2011, and for use with Robert Picard's -project- command
+. *********************************************************************************************************************
+. 
+. project , original("../01_data/scheduled_tribal_areas/scheduled_and_tribal_districts_2011.xlsx")
+{txt}project version2_tribe_language > do-file uses original: {res}"01_data/scheduled_tribal_areas/scheduled_and_tribal_districts_2011.xlsx" filesig(1729322569:31652){txt}
+
+{com}. project , uses("../03_processed/regions6113_with_dists_2011.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"03_processed/regions6113_with_dists_2011.dta" filesig(2253008095:240447){txt}
+
+{com}. 
+. import excel using "../01_data/scheduled_tribal_areas/scheduled_and_tribal_districts_2011.xlsx", clear firstrow case(lower)
+{res}{text}(6 vars, 675 obs)
+
+{com}. 
+. replace scheduledarea = "0.5" if strpos(scheduledarea,"part")
+{txt}(73 real changes made)
+
+{com}. replace tribalarea = "0.5" if strpos(tribalarea,"part")
+{txt}(2 real changes made)
+
+{com}. 
+. destring scheduledarea, replace
+{txt}scheduledarea: all characters numeric; {res}replaced {txt}as {res}double
+{txt}(559 missing values generated)
+{res}{txt}
+{com}. destring tribalarea, replace
+{txt}tribalarea: all characters numeric; {res}replaced {txt}as {res}double
+{txt}(652 missing values generated)
+{res}{txt}
+{com}. 
+. rename census2011statecode state_code_2011
+{res}{txt}
+{com}. rename census2011districtcode district_code_2011
+{res}{txt}
+{com}. rename name district_2011
+{res}{txt}
+{com}. 
+. gen double dcode_2011 = 201100000 + state_code_2011 * 1000 + district_code_2011
+{txt}
+{com}. format %9.0f dcode_2011
+{txt}
+{com}. 
+. drop state_code_2011 district_code_2011
+{txt}
+{com}. 
+. replace scheduledarea = 0 if missing(scheduledarea)
+{txt}(559 real changes made)
+
+{com}. replace tribalarea = 0 if missing(tribalarea)
+{txt}(652 real changes made)
+
+{com}. 
+. rename (scheduledarea tribalarea) =_2011
+{res}{txt}
+{com}. 
+. tempfile areas
+{txt}
+{com}. save `areas'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_13929.000006{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+. use "../03_processed/regions6113_with_dists_2011", clear
+{txt}
+{com}. drop dists_2011_in_region6113
+{txt}
+{com}. 
+. merge 1:1 dcode_2011 using `areas', assert(match) nogen keepusing(district_2011 scheduledarea_2011 tribalarea_2011)
+{res}{txt}{p 0 7 2}
+(variable
+{bf:dcode_2011} was {bf:long}, now {bf:double} to accommodate using data's values)
+{p_end}
+
+{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}               0
+{txt}{col 5}Matched{col 30}{res}             675{txt}  
+{col 5}{hline 41}
+
+{com}. 
+. foreach type in scheduled tribal {c -(}
+{txt}  2{com}.         tempvar `type'area_1961_min `type'area_1961_max 
+{txt}  3{com}.         egen ``type'area_1961_min' = min(`type'area_2011), by(region6113)
+{txt}  4{com}.         egen ``type'area_1961_max' = max(`type'area_2011), by(region6113)
+{txt}  5{com}.         gen `type'area_1961 = 1 if ``type'area_1961_min' == 1
+{txt}  6{com}.         replace `type'area_1961 = 0 if ``type'area_1961_max' == 0
+{txt}  7{com}.         replace `type'area_1961 = 0.5 if missing(`type'area_1961)
+{txt}  8{com}.         {c )-}
+{txt}(651 missing values generated)
+(542 real changes made)
+(109 real changes made)
+(661 missing values generated)
+(637 real changes made)
+(24 real changes made)
+
+{com}. 
+. duplicates drop region6113, force
+
+{p 0 4}{txt}Duplicates in terms of {res} region6113{p_end}
+
+{txt}(364 observations deleted)
+
+{com}. keep *_1961 *6113
+{txt}
+{com}. 
+. rename *_1961 *6113
+{res}{txt}
+{com}. 
+. label var scheduledarea6113 "Scheduled Area as per Fifth Schedule"
+{txt}
+{com}. label var tribalarea6113 "Tribal Area as per Sixth Schedule"
+{txt}
+{com}. 
+. save "../08_temp/scheduled_and_tribal_regions", replace
+{txt}{p 0 4 2}
+file {bf}
+../08_temp/scheduled_and_tribal_regions.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. project , creates("../08_temp/scheduled_and_tribal_regions.dta")
+{txt}project version2_tribe_language > do-file creates: {res}"08_temp/scheduled_and_tribal_regions.dta" filesig(708465558:38081){txt}
+
+{com}. 
+. 
+. 
+. 
+. 
+{txt}end of do-file
+      name:  {res}plog_812
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/1.14a_code_scheduled_tribal_areas.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res} 6 Sep 2021, 20:44:57
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

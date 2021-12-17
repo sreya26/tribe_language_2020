@@ -1,0 +1,973 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}plog_894
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/2.10_make_excel_region_tables.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}16 Nov 2021, 12:41:44
+{txt}
+{com}. 
+. project , uses("../03_processed/dise_basic_general_with_regions.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"03_processed/dise_basic_general_with_regions.dta" filesig(4208678473:526147983){txt}
+
+{com}. project , uses("../03_processed/lang_workfile.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"03_processed/lang_workfile.dta" filesig(4101914903:5173431){txt}
+
+{com}. project , uses("../03_processed/census_1961_mothertongue_for_analysis_distance.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"03_processed/census_1961_mothertongue_for_analysis_distance.dta" filesig(2272825759:18580009){txt}
+
+{com}. project , uses("../03_processed/regions6113_with_dists_2011.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"03_processed/regions6113_with_dists_2011.dta" filesig(2253008095:240447){txt}
+
+{com}. project , uses("../08_temp/census2011_st_edu_data.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"08_temp/census2011_st_edu_data.dta" filesig(1403772620:44470432){txt}
+
+{com}. project , uses("../08_temp/census2011_sc_edu_data.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"08_temp/census2011_sc_edu_data.dta" filesig(552711035:526413){txt}
+
+{com}. project , uses("../08_temp/census2011_overall_edu_data.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"08_temp/census2011_overall_edu_data.dta" filesig(1980474:587538){txt}
+
+{com}. 
+. 
+. *************************************************************************************************************************************  
+. *Getting the top two mediums of instructions in regions using DISE data 
+. *************************************************************************************************************************************
+.         
+.                 
+.         use "../03_processed/dise_basic_general_with_regions.dta" , clear
+{txt}
+{com}.                 
+.         gen num_schools = 1
+{txt}
+{com}.         collapse (count) num_schools, by(region6113 medinstr1)
+{res}{txt}
+{com}.         egen total_num_schools = total(num_schools), by(region6113)
+{txt}
+{com}.         gen medium_perc = num_schools/total_num_schools * 100
+{txt}
+{com}.         egen medium_rank = rank(-num_schools), by(region6113)
+{txt}
+{com}.         keep if inrange(medium_rank,1,2)
+{txt}(835 observations deleted)
+
+{com}. 
+. 
+.         keep region6113 medinstr1 medium_perc medium_rank
+{txt}
+{com}.         reshape wide medinstr1 medium_perc, i(region6113) j(medium_rank)
+{txt}(j = 1 2)
+
+Data{col 36}Long{col 43}->{col 48}Wide
+{hline 77}
+Number of observations     {res}         542   {txt}->   {res}275         
+{txt}Number of variables        {res}           4   {txt}->   {res}5           
+{txt}j variable (2 values)       {res}medium_rank   {txt}->   (dropped)
+xij variables:
+                              {res}medinstr1   {txt}->   {res}medinstr11 medinstr12
+                            medium_perc   {txt}->   {res}medium_perc1 medium_perc2
+{txt}{hline 77}
+
+{com}. 
+.         tempfile dise_data_reg
+{txt}
+{com}.         save `dise_data_reg'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_00324.000008{rm}
+saved
+as .dta format
+{p_end}
+
+{com}.         
+.         
+. *************************************************************************************************************************************  
+. * Using the Lang workfile to get top 10 tribes in the country
+. * perc of the top 10 tribes in the regions, retaining only the top 5 regions where they occur
+. * finally merging with dise data which has info on medium of instruction 
+. *************************************************************************************************************************************
+. 
+.          
+.          use "../03_processed/lang_workfile.dta", clear
+{txt}
+{com}.          drop if is_state | castegroup_1961_2011_code == 500 
+{txt}(660 observations deleted)
+
+{com}.          egen total_st_popn_2011 = total(total_p_2011)
+{txt}
+{com}.          egen total_tribe_popn_2011 = total(total_p_2011), by(castegroup_1961_2011_code)
+{txt}
+{com}.          
+.         drop if castegroup_1961_2011_code == 990
+{txt}(165 observations deleted)
+
+{com}. 
+.         preserve
+{txt}
+{com}.                         collapse (sum) total_p_2011, by(castegroup_1961_2011_code)
+{res}{txt}
+{com}.                         gsort -total_p_2011
+{txt}
+{com}. 
+.                         gen big10 = 1 in 1/10
+{txt}(232 missing values generated)
+
+{com}.                         replace big10 = 0 if missing(big10)
+{txt}(232 real changes made)
+
+{com}. 
+.                         keep castegroup_1961_2011_code big10
+{txt}
+{com}.                         tempfile big10
+{txt}
+{com}.                         save `big10'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_00324.00000a{rm}
+saved
+as .dta format
+{p_end}
+
+{com}.         restore
+{txt}
+{com}.                 
+.         merge m:1 castegroup_1961_2011_code using `big10', nogen
+{res}{txt}(label {bf:{txt}CASTE_GROUPS_1961_2011} already defined)
+
+{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}               0
+{txt}{col 5}Matched{col 30}{res}           2,090{txt}  
+{col 5}{hline 41}
+
+{com}.         keep if big10 == 1
+{txt}(1,650 observations deleted)
+
+{com}.         gen region_tribe_perc = total_p_2011/total_tribe_popn_2011 * 100
+{txt}
+{com}.         gen national_tribe_perc = total_tribe_popn_2011/total_st_popn_2011 * 100
+{txt}
+{com}. 
+.         
+.         
+.         egen top_regions_2011 = rank(-region_tribe_perc), by(castegroup_1961_2011_code)
+{txt}
+{com}.         keep if inrange(top_regions_2011,1,5)
+{txt}(391 observations deleted)
+
+{com}. 
+.         keep region6113 castegroup_1961_2011_code total_st_popn_2011 total_tribe_popn_2011 total_p_2011 national_tribe_perc ///
+>         region_tribe_perc top_regions_2011 gross_literacy_rate_2011 literacy_rate_2011 gross_matricplus_rate_2011 matricplus_rate_2011
+{txt}
+{com}.         
+. 
+.         merge m:1 region6113 using `dise_data_reg' , keep(match) nogen
+{res}
+{txt}{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}               0
+{txt}{col 5}Matched{col 30}{res}              49{txt}  
+{col 5}{hline 41}
+
+{com}. 
+. 
+.         tempfile region_dise
+{txt}
+{com}.         save `region_dise'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_00324.00000b{rm}
+saved
+as .dta format
+{p_end}
+
+{com}.         
+.         
+. ********************************************************************************************************************************************************************************
+. * Using mothertongue data to identify the mothertongues which are
+. * (1) used as a medium of instruction in school 
+. * (2) the language most commonly spoken by that tribe in that region
+. ********************************************************************************************************************************************************************************
+. 
+. 
+.         use "../03_processed/census_1961_mothertongue_for_analysis_distance.dta", clear
+{txt}
+{com}. 
+.         drop if mothertongue == "all mother tongues" | castegroup_1961_2011_code == 500
+{txt}(6,207 observations deleted)
+
+{com}.         drop if is_state == 1
+{txt}(3,133 observations deleted)
+
+{com}. 
+.         egen total_speakers_p = rowtotal(total_speakers_m total_speakers_f)
+{txt}
+{com}.         egen region_popn = total(total_speakers_p), by(castegroup_1961_2011_code region6113)
+{txt}
+{com}.         
+.         gen state_2011 = state_1961
+{txt}
+{com}.         replace state_2011 = "Jharkhand" if state_1961 == "Bihar" & inlist(regionname6113,"Santal Parganas","Palamau","Dhanbad, Hazaribagh","Ranchi","Singhbhum")
+{txt}(619 real changes made)
+
+{com}.         replace state_2011 = "Chhattisgarh" if state_1961 == "Madhya Pradesh" & inlist(regionname6113,"Surguja","Bilaspur, Durg","Raigarh","Raipur","Bastar")
+{txt}(526 real changes made)
+
+{com}.         replace state_2011 = "Meghalaya" if state_1961 == "Assam"  & inlist(regionname6113,"Garo Hills","United Khasi And Jaintia Hills")
+{txt}(67 real changes made)
+
+{com}.         replace state_2011 = "Mizoram" if state_1961 == "Assam" & inlist(regionname6113,"Mizo Hills")
+{txt}(37 real changes made)
+
+{com}. 
+. 
+.         keep state_2011 regionname6113 region6113 castegroup_1961_2011_code mothertongue total_speakers_p region_popn
+{txt}
+{com}.         merge m:1 region6113 castegroup_1961_2011_code using `region_dise' , keep(match) nogen
+{res}{txt}{p 0 7 2}
+(variable
+{bf:region6113} was {bf:int}, now {bf:float} to accommodate using data's values)
+{p_end}
+(label {bf:{txt}CASTE_GROUPS_1961_2011} already defined)
+(label {bf:{txt}MEDINSTR1} already defined)
+
+{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}               0
+{txt}{col 5}Matched{col 30}{res}             464{txt}  
+{col 5}{hline 41}
+
+{com}.         
+. 
+.         order state_2011 regionname6113 region6113 castegroup_1961_2011_code mothertongue medinstr11 medinstr12
+{txt}
+{com}. 
+.         egen tag = tag(regionname6113 medinstr11)
+{txt}
+{com}.         list state_2011 regionname6113 medinstr11 if tag == 1 , noobs table
+{txt}
+  {c TLC}{hline 16}{c -}{hline 36}{c -}{hline 10}{c TRC}
+  {c |} {res}    state_2011                       regionname6113   medin~11 {txt}{c |}
+  {c LT}{hline 16}{c -}{hline 36}{c -}{hline 10}{c RT}
+  {c |} {res}     Meghalaya                           Garo Hills       Garo {txt}{c |}
+  {c |} {res}     Meghalaya       United Khasi And Jaintia Hills      Khasi {txt}{c |}
+  {c |} {res}         Assam   United Mikir And North Cachar Hill    English {txt}{c |}
+  {c |} {res}       Mizoram                           Mizo Hills       Mizo {txt}{c |}
+  {c |} {res}     Jharkhand                      Santal Parganas      Hindi {txt}{c |}
+  {c LT}{hline 16}{c -}{hline 36}{c -}{hline 10}{c RT}
+  {c |} {res}     Jharkhand                  Dhanbad, Hazaribagh      Hindi {txt}{c |}
+  {c |} {res}     Jharkhand                               Ranchi      Hindi {txt}{c |}
+  {c |} {res}     Jharkhand                            Singhbhum      Hindi {txt}{c |}
+  {c |} {res}       Gujarat                          Panchmahals   Gujarati {txt}{c |}
+  {c |} {res}Madhya Pradesh                               Jhabua      Hindi {txt}{c |}
+  {c LT}{hline 16}{c -}{hline 36}{c -}{hline 10}{c RT}
+  {c |} {res}Madhya Pradesh                           West Nimar      Hindi {txt}{c |}
+  {c |} {res}Madhya Pradesh                               Mandla      Hindi {txt}{c |}
+  {c |} {res}  Chhattisgarh                              Surguja      Hindi {txt}{c |}
+  {c |} {res}  Chhattisgarh                       Bilaspur, Durg      Hindi {txt}{c |}
+  {c |} {res}  Chhattisgarh                              Raigarh      Hindi {txt}{c |}
+  {c LT}{hline 16}{c -}{hline 36}{c -}{hline 10}{c RT}
+  {c |} {res}  Chhattisgarh                               Raipur      Hindi {txt}{c |}
+  {c |} {res}  Chhattisgarh                               Bastar      Hindi {txt}{c |}
+  {c |} {res}   Maharashtra                                Thana    Marathi {txt}{c |}
+  {c |} {res}   Maharashtra                                Nasik    Marathi {txt}{c |}
+  {c |} {res}   Maharashtra                               Dhulia    Marathi {txt}{c |}
+  {c LT}{hline 16}{c -}{hline 36}{c -}{hline 10}{c RT}
+  {c |} {res}   Maharashtra                              Jalgaon    Marathi {txt}{c |}
+  {c |} {res}   Maharashtra                           Ahmadnagar    Marathi {txt}{c |}
+  {c |} {res}   Maharashtra                                Poona    Marathi {txt}{c |}
+  {c |} {res}   Maharashtra                               Chanda    Marathi {txt}{c |}
+  {c |} {res}       Manipur                    Mao & Sadar Hills    English {txt}{c |}
+  {c LT}{hline 16}{c -}{hline 36}{c -}{hline 10}{c RT}
+  {c |} {res}       Manipur                            Tamenlang     Others {txt}{c |}
+  {c |} {res}      Nagaland                   Kohima, Mokokchung    English {txt}{c |}
+  {c |} {res}      Nagaland                             Tuensang    English {txt}{c |}
+  {c |} {res}        Orissa                   Kalahandi, Koraput      Oriya {txt}{c |}
+  {c |} {res}        Orissa                             Bolangir      Oriya {txt}{c |}
+  {c LT}{hline 16}{c -}{hline 36}{c -}{hline 10}{c RT}
+  {c |} {res}        Orissa                      Baudh-Khondmals      Oriya {txt}{c |}
+  {c |} {res}        Orissa                               Ganjam      Oriya {txt}{c |}
+  {c |} {res}        Orissa                           Sundargarh      Oriya {txt}{c |}
+  {c |} {res}        Orissa                                 Puri      Oriya {txt}{c |}
+  {c |} {res}        Orissa                           Mayurbhanj      Oriya {txt}{c |}
+  {c LT}{hline 16}{c -}{hline 36}{c -}{hline 10}{c RT}
+  {c |} {res}     Rajasthan                                Alwar      Hindi {txt}{c |}
+  {c |} {res}     Rajasthan               Jaipur, Sawai Madhopur      Hindi {txt}{c |}
+  {c |} {res}     Rajasthan        Banswara, Chitorgarh, Udaipur      Hindi {txt}{c |}
+  {c |} {res}     Rajasthan                                Bundi      Hindi {txt}{c |}
+  {c |} {res}     Rajasthan                                 Kota      Hindi {txt}{c |}
+  {c LT}{hline 16}{c -}{hline 36}{c -}{hline 10}{c RT}
+  {c |} {res}   West Bengal                           Jalpaiguri    Bengali {txt}{c |}
+  {c |} {res}   West Bengal                            Midnapore    Bengali {txt}{c |}
+  {c BLC}{hline 16}{c -}{hline 36}{c -}{hline 10}{c BRC}
+
+{com}.         drop tag 
+{txt}
+{com}.         
+.         /*
+>   +----------------------------------------------------------------+
+>   |     state_2011                       regionname6113   medin~11 |
+>   |----------------------------------------------------------------|
+>   |          Assam                           Garo Hills       Garo |
+>   |          Assam       United Khasi And Jaintia Hills      Khasi |
+>   |          Assam   United Mikir And North Cachar Hill    English |
+>   |          Assam                           Mizo Hills       Mizo |
+>   |      Jharkhand                      Santal Parganas      Hindi |
+>   |----------------------------------------------------------------|
+>   |      Jharkhand                  Dhanbad, Hazaribagh      Hindi |
+>   |      Jharkhand                               Ranchi      Hindi |
+>   |      Jharkhand                            Singhbhum      Hindi |
+>   |        Gujarat                          Panchmahals   Gujarati |
+>   | Madhya Pradesh                               Jhabua      Hindi |
+>   |----------------------------------------------------------------|
+>   | Madhya Pradesh                           West Nimar      Hindi |
+>   | Madhya Pradesh                               Mandla      Hindi |
+>   |   Chhattisgarh                              Surguja      Hindi |
+>   |   Chhattisgarh                       Bilaspur, Durg      Hindi |
+>   |   Chhattisgarh                              Raigarh      Hindi |
+>   |----------------------------------------------------------------|
+>   |   Chhattisgarh                               Raipur      Hindi |
+>   |   Chhattisgarh                               Bastar      Hindi |
+>   |    Maharashtra                                Thana    Marathi |
+>   |    Maharashtra                                Nasik    Marathi |
+>   |    Maharashtra                               Dhulia    Marathi |
+>   |----------------------------------------------------------------|
+>   |    Maharashtra                              Jalgaon    Marathi |
+>   |    Maharashtra                           Ahmadnagar    Marathi |
+>   |    Maharashtra                                Poona    Marathi |
+>   |    Maharashtra                               Chanda    Marathi |
+>   |        Manipur                    Mao & Sadar Hills    English |
+>   |----------------------------------------------------------------|
+>   |        Manipur                            Tamenlang     Others |
+>   |       Nagaland                   Kohima, Mokokchung    English |
+>   |       Nagaland                             Tuensang    English |
+>   |         Orissa                   Kalahandi, Koraput      Oriya |
+>   |         Orissa                             Bolangir      Oriya |
+>   |----------------------------------------------------------------|
+>   |         Orissa                      Baudh-Khondmals      Oriya |
+>   |         Orissa                               Ganjam      Oriya |
+>   |         Orissa                           Sundargarh      Oriya |
+>   |         Orissa                                 Puri      Oriya |
+>   |         Orissa                           Mayurbhanj      Oriya |
+>   |----------------------------------------------------------------|
+>   |      Rajasthan                                Alwar      Hindi |
+>   |      Rajasthan               Jaipur, Sawai Madhopur      Hindi |
+>   |      Rajasthan        Banswara, Chitorgarh, Udaipur      Hindi |
+>   |      Rajasthan                                Bundi      Hindi |
+>   |      Rajasthan                                 Kota      Hindi |
+>   |----------------------------------------------------------------|
+>   |    West Bengal                           Jalpaiguri    Bengali |
+>   |    West Bengal                            Midnapore    Bengali |
+>   +----------------------------------------------------------------+
+> */
+.         
+.         gen reg_lang = 0 //constructing indicators to flag the mothertongues spoken as medium of instruction in the respective region 
+{txt}
+{com}.         
+.         replace reg_lang = 1 if mothertongue == "bengali" & inlist(state_2011, "West Bengal")
+{txt}(2 real changes made)
+
+{com}.         replace reg_lang = 1 if mothertongue == "hindi" & inlist(state_2011,"Rajasthan", "Madhya Pradesh", "Jharkhand", "Chhattisgarh")
+{txt}(17 real changes made)
+
+{com}.         replace reg_lang = 1 if mothertongue == "gujarati" & inlist(state_2011, "Gujarat")
+{txt}(1 real change made)
+
+{com}.         replace reg_lang = 1 if mothertongue == "marathi" & state_2011 == "Maharashtra"
+{txt}(7 real changes made)
+
+{com}.         replace reg_lang = 1 if mothertongue == "oriya" & state_2011 == "Orissa"
+{txt}(7 real changes made)
+
+{com}.         replace reg_lang = 1 if mothertongue == "english" & state_2011 == "Nagaland"
+{txt}(0 real changes made)
+
+{com}.         replace reg_lang = 1 if mothertongue == "garo" & inlist(regionname6113,"Garo Hills")
+{txt}(1 real change made)
+
+{com}.         replace reg_lang = 1 if mothertongue == "khasi" & inlist(regionname6113,"United Khasi And Jaintia Hills")
+{txt}(1 real change made)
+
+{com}.         replace reg_lang = 1 if mothertongue == "english" & inlist(regionname6113,"United Mikir And North Cachar Hill")
+{txt}(0 real changes made)
+
+{com}.         replace reg_lang = 1 if mothertongue == "mizo" & inlist(regionname6113,"Mizo Hills")
+{txt}(0 real changes made)
+
+{com}.         replace reg_lang = 1 if mothertongue == "english" & inlist(regionname6113,"Mao & Sadar Hills")
+{txt}(0 real changes made)
+
+{com}.         
+.         
+.         egen tag = tag(regionname6113 medinstr12)
+{txt}
+{com}.         list state_2011 regionname6113 medinstr12 if tag == 1 , noobs table
+{txt}
+  {c TLC}{hline 16}{c -}{hline 36}{c -}{hline 10}{c TRC}
+  {c |} {res}    state_2011                       regionname6113   medin~12 {txt}{c |}
+  {c LT}{hline 16}{c -}{hline 36}{c -}{hline 10}{c RT}
+  {c |} {res}     Meghalaya                           Garo Hills   Assamese {txt}{c |}
+  {c |} {res}     Meghalaya       United Khasi And Jaintia Hills    English {txt}{c |}
+  {c |} {res}         Assam   United Mikir And North Cachar Hill   Assamese {txt}{c |}
+  {c |} {res}       Mizoram                           Mizo Hills    English {txt}{c |}
+  {c |} {res}     Jharkhand                      Santal Parganas    English {txt}{c |}
+  {c LT}{hline 16}{c -}{hline 36}{c -}{hline 10}{c RT}
+  {c |} {res}     Jharkhand                  Dhanbad, Hazaribagh    English {txt}{c |}
+  {c |} {res}     Jharkhand                               Ranchi    English {txt}{c |}
+  {c |} {res}     Jharkhand                            Singhbhum    Bengali {txt}{c |}
+  {c |} {res}       Gujarat                          Panchmahals    English {txt}{c |}
+  {c |} {res}Madhya Pradesh                               Jhabua         98 {txt}{c |}
+  {c LT}{hline 16}{c -}{hline 36}{c -}{hline 10}{c RT}
+  {c |} {res}Madhya Pradesh                           West Nimar    English {txt}{c |}
+  {c |} {res}Madhya Pradesh                               Mandla    English {txt}{c |}
+  {c |} {res}  Chhattisgarh                              Surguja    English {txt}{c |}
+  {c |} {res}  Chhattisgarh                       Bilaspur, Durg    English {txt}{c |}
+  {c |} {res}  Chhattisgarh                              Raigarh    English {txt}{c |}
+  {c LT}{hline 16}{c -}{hline 36}{c -}{hline 10}{c RT}
+  {c |} {res}  Chhattisgarh                               Raipur    English {txt}{c |}
+  {c |} {res}  Chhattisgarh                               Bastar    English {txt}{c |}
+  {c |} {res}   Maharashtra                                Thana    English {txt}{c |}
+  {c |} {res}   Maharashtra                                Nasik    English {txt}{c |}
+  {c |} {res}   Maharashtra                               Dhulia    English {txt}{c |}
+  {c LT}{hline 16}{c -}{hline 36}{c -}{hline 10}{c RT}
+  {c |} {res}   Maharashtra                              Jalgaon       Urdu {txt}{c |}
+  {c |} {res}   Maharashtra                           Ahmadnagar    English {txt}{c |}
+  {c |} {res}   Maharashtra                                Poona    English {txt}{c |}
+  {c |} {res}   Maharashtra                               Chanda    English {txt}{c |}
+  {c |} {res}       Manipur                    Mao & Sadar Hills      Hindi {txt}{c |}
+  {c LT}{hline 16}{c -}{hline 36}{c -}{hline 10}{c RT}
+  {c |} {res}       Manipur                            Tamenlang    English {txt}{c |}
+  {c |} {res}        Orissa                   Kalahandi, Koraput    English {txt}{c |}
+  {c |} {res}        Orissa                             Bolangir    English {txt}{c |}
+  {c |} {res}        Orissa                      Baudh-Khondmals    English {txt}{c |}
+  {c |} {res}        Orissa                               Ganjam    English {txt}{c |}
+  {c LT}{hline 16}{c -}{hline 36}{c -}{hline 10}{c RT}
+  {c |} {res}        Orissa                           Sundargarh    English {txt}{c |}
+  {c |} {res}        Orissa                                 Puri    English {txt}{c |}
+  {c |} {res}        Orissa                           Mayurbhanj    English {txt}{c |}
+  {c |} {res}     Rajasthan                                Alwar    English {txt}{c |}
+  {c |} {res}     Rajasthan               Jaipur, Sawai Madhopur    English {txt}{c |}
+  {c LT}{hline 16}{c -}{hline 36}{c -}{hline 10}{c RT}
+  {c |} {res}     Rajasthan        Banswara, Chitorgarh, Udaipur    English {txt}{c |}
+  {c |} {res}     Rajasthan                                Bundi    English {txt}{c |}
+  {c |} {res}     Rajasthan                                 Kota    English {txt}{c |}
+  {c |} {res}   West Bengal                           Jalpaiguri      Hindi {txt}{c |}
+  {c |} {res}   West Bengal                            Midnapore    English {txt}{c |}
+  {c BLC}{hline 16}{c -}{hline 36}{c -}{hline 10}{c BRC}
+
+{com}.         drop tag 
+{txt}
+{com}.         
+.         
+.         /*
+>  +----------------------------------------------------------------+
+>   |     state_2011                       regionname6113   medin~12 |
+>   |----------------------------------------------------------------|
+>   |      Meghalaya                           Garo Hills   Assamese |
+>   |      Meghalaya       United Khasi And Jaintia Hills    English |
+>   |          Assam   United Mikir And North Cachar Hill   Assamese |
+>   |        Mizoram                           Mizo Hills    English |
+>   |      Jharkhand                      Santal Parganas    English |
+>   |----------------------------------------------------------------|
+>   |      Jharkhand                  Dhanbad, Hazaribagh    English |
+>   |      Jharkhand                               Ranchi    English |
+>   |      Jharkhand                            Singhbhum    Bengali |
+>   |        Gujarat                          Panchmahals    English |
+>   | Madhya Pradesh                               Jhabua         98 |
+>   |----------------------------------------------------------------|
+>   | Madhya Pradesh                           West Nimar    English |
+>   | Madhya Pradesh                               Mandla    English |
+>   |   Chhattisgarh                              Surguja    English |
+>   |   Chhattisgarh                       Bilaspur, Durg    English |
+>   |   Chhattisgarh                              Raigarh    English |
+>   |----------------------------------------------------------------|
+>   |   Chhattisgarh                               Raipur    English |
+>   |   Chhattisgarh                               Bastar    English |
+>   |    Maharashtra                                Thana    English |
+>   |    Maharashtra                                Nasik    English |
+>   |    Maharashtra                               Dhulia    English |
+>   |----------------------------------------------------------------|
+>   |    Maharashtra                              Jalgaon       Urdu |
+>   |    Maharashtra                           Ahmadnagar    English |
+>   |    Maharashtra                                Poona    English |
+>   |    Maharashtra                               Chanda    English |
+>   |        Manipur                    Mao & Sadar Hills      Hindi |
+>   |----------------------------------------------------------------|
+>   |        Manipur                            Tamenlang    English |
+>   |         Orissa                   Kalahandi, Koraput    English |
+>   |         Orissa                             Bolangir    English |
+>   |         Orissa                      Baudh-Khondmals    English |
+>   |         Orissa                               Ganjam    English |
+>   |----------------------------------------------------------------|
+>   |         Orissa                           Sundargarh    English |
+>   |         Orissa                                 Puri    English |
+>   |         Orissa                           Mayurbhanj    English |
+>   |      Rajasthan                                Alwar    English |
+>   |      Rajasthan               Jaipur, Sawai Madhopur    English |
+>   |----------------------------------------------------------------|
+>   |      Rajasthan        Banswara, Chitorgarh, Udaipur    English |
+>   |      Rajasthan                                Bundi    English |
+>   |      Rajasthan                                 Kota    English |
+>   |    West Bengal                           Jalpaiguri      Hindi |
+>   |    West Bengal                            Midnapore    English |
+>   +----------------------------------------------------------------+
+> 
+>         */
+.         
+.         gen reg_lang_2 = 0 //constructing indicators to flag the mothertongues spoken as medium of instruction in the respective region 
+{txt}
+{com}.         replace reg_lang_2 = 1 if mothertongue == "assamese" &  regionname6113 == "Garo Hills"
+{txt}(0 real changes made)
+
+{com}.         replace reg_lang_2 = 1 if mothertongue == "assamese" & regionname6113 == "United Mikir And North Cachar Hill"
+{txt}(1 real change made)
+
+{com}.         replace reg_lang_2 = 1 if mothertongue == "bengali" & regionname6113 == "Singhbhum"
+{txt}(2 real changes made)
+
+{com}.         replace reg_lang_2 = 1 if mothertongue == "urdu" & regionname6113 == "Jalgaon"
+{txt}(1 real change made)
+
+{com}.         replace reg_lang_2 = 1 if mothertongue == "hindi" & regionname6113 == "Mao & Sadar Hills"
+{txt}(0 real changes made)
+
+{com}.         replace reg_lang_2 = 1 if mothertongue == "hindi" & regionname6113 == "Jalpaiguri"
+{txt}(1 real change made)
+
+{com}.         replace reg_lang_2 = 1 if mothertongue == "english" & !inlist(regionname6113,"Garo Hills","United Mikir And North Cachar Hill","Singhbhum","Jalgaon","Mao & Sadar Hills","Jalpaiguri")
+{txt}(0 real changes made)
+
+{com}.         
+. 
+.         gen lang_perc = total_speakers_p/region_popn * 100
+{txt}
+{com}.         egen lang_rank = rank(-lang_perc), by(castegroup_1961_2011_code region6113) //rank the mothertongues spoken in the region acc to number of speakers 
+{txt}
+{com}.         keep if reg_lang == 1 | reg_lang_2 == 1 | inrange(lang_rank,1,3) //we only retain those mothertongues which are either spoken as the medium of instructions or ranked 1-3 depending on total speakers
+{txt}(310 observations deleted)
+
+{com}.         
+. ********************************************************************************************************************************************************************************
+. * Lang Order Logic
+. * first we display the major medium of instruction
+. * next we display the second major medium of instruction 
+. * next we display the most popular language spoken in the region 
+. * in the event that mediums of instruction are not spoken, we include other popular mothertongues, ranks are scaled by 10 so as to not interfere with preassigned order
+. *******************************************************************************************************************************************************************************
+. 
+.         
+.         gen lang_order = 1 if reg_lang == 1 
+{txt}(118 missing values generated)
+
+{com}.         replace lang_order = 2 if reg_lang_2 == 1 
+{txt}(5 real changes made)
+
+{com}.         replace lang_order = 3 if lang_rank == 1 & !inlist(lang_order,1,2) 
+{txt}(35 real changes made)
+
+{com}.         replace lang_order = lang_rank + 10 if !inlist(lang_order,1,2,3) 
+{txt}(78 real changes made)
+
+{com}.         
+.         sort castegroup_1961_2011_code region6113
+{txt}
+{com}.         keep lang_order state_2011 regionname6113 castegroup_1961_2011_code national_tribe_perc region_tribe_perc ///
+>         matricplus_rate_2011 literacy_rate_2011 medinstr11 medium_perc1 medinstr12 medium_perc2 mothertongue lang_perc 
+{txt}
+{com}. 
+.         
+.         format national_tribe_perc region_tribe_perc matricplus_rate_2011 literacy_rate_2011 lang_perc medium_perc1 medium_perc2 %5.2f
+{txt}
+{com}.         bysort castegroup_1961_2011_code regionname6113 (lang_order): gen i = _n
+{txt}
+{com}. 
+.         drop lang_order
+{txt}
+{com}.         reshape wide lang_perc mothertongue, i(state_2011 regionname6113 castegroup_1961_2011_code) j(i) 
+{txt}(j = 1 2 3 4)
+
+Data{col 36}Long{col 43}->{col 48}Wide
+{hline 77}
+Number of observations     {res}         154   {txt}->   {res}49          
+{txt}Number of variables        {res}          14   {txt}->   {res}19          
+{txt}j variable (4 values)                 {res}i   {txt}->   (dropped)
+xij variables:
+                              {res}lang_perc   {txt}->   {res}lang_perc1 lang_perc2 ... lang_perc4
+                           mothertongue   {txt}->   {res}mothertongue1 mothertongue2 ... mothertongue4
+{txt}{hline 77}
+
+{com}.         
+.         
+.         gen matricplus_rate_2011_perc = matricplus_rate_2011 * 100
+{txt}
+{com}.         gen literacy_rate_2011_perc = literacy_rate_2011 * 100 
+{txt}
+{com}.         drop matricplus_rate_2011 literacy_rate_2011 mothertongue4 lang_perc4
+{txt}
+{com}.         format matricplus_rate_2011_perc literacy_rate_2011_perc %5.2f
+{txt}
+{com}. 
+.         order state_2011 regionname6113 castegroup_1961_2011_code national_tribe_perc region_tribe_perc matricplus_rate_2011_perc literacy_rate_2011_perc medinstr11 medium_perc1 medinstr12 medium_perc2 
+{txt}
+{com}.         gsort castegroup_1961_2011_code -region_tribe_perc
+{txt}
+{com}.         
+.         
+.         save "../08_temp/census2011_regions_table.dta" , replace
+{txt}{p 0 4 2}
+file {bf}
+../08_temp/census2011_regions_table.dta{rm}
+saved
+{p_end}
+
+{com}.         
+. *********************************************************************************************************************
+. ** Now we add in additional information to these tables 
+. ** (1) percentage of total sc popn as a fraction of overall popn and matricplus rate of scs
+. ** (2) percentage of total non-sc/st popn as a fraction of overall popn and matricplus rate of non-sc/st
+. ** (3) percentage of st's popn excluding the particular big 10 tribe as a fraction of overall popn in the specific region and their matric+ rate
+. ** (4) percentage of all st popn as a fraction of overall popn and matricplus rate of sts
+. *********************************************************************************************************************   
+.                 
+. *********************************************************************************************************************
+. ** first we retain only the all scheduled tribes obs and tag them as such
+. *********************************************************************************************************************
+. 
+.         use "../08_temp/census2011_st_edu_data.dta" , clear
+{txt}
+{com}.         drop if district_code == 0
+{txt}(2,604 observations deleted)
+
+{com}.         keep if caste_code == 500
+{txt}(40,338 observations deleted)
+
+{com}.         keep if tru == "Total"
+{txt}(1,170 observations deleted)
+
+{com}.         drop tru
+{txt}
+{com}. 
+.         egen matricplus_p = rowtotal(matric_p intermediate_p nontechdiploma_p techdiploma_p graduate_p)
+{txt}
+{com}. 
+.         foreach var of varlist total_p matricplus_p age0to14_p{c -(}
+{txt}  2{com}.                 rename `var' `var'_st
+{txt}  3{com}.         {c )-}
+{res}{txt}
+{com}. 
+.         keep state_code district_code state district *_st
+{txt}
+{com}.         tempfile edu_st
+{txt}
+{com}.         save `edu_st'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_00324.00000c{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+. *********************************************************************************************************************
+. ** similarly tag the total sc popn obs
+. *********************************************************************************************************************
+. 
+.         use "../08_temp/census2011_sc_edu_data.dta" , clear
+{txt}
+{com}.         drop __*
+{txt}
+{com}.         keep if tru == "Total"
+{txt}(1,218 observations deleted)
+
+{com}.         drop tru
+{txt}
+{com}. 
+.         egen matricplus_p = rowtotal(matric_p intermediate_p nontechdiploma_p techdiploma_p graduate_p)
+{txt}
+{com}.         foreach var of varlist total_p matricplus_p age0to14_p{c -(}
+{txt}  2{com}.                 rename `var' `var'_sc
+{txt}  3{com}.         {c )-}
+{res}{txt}
+{com}. 
+.         keep state_code district_code state district *_sc
+{txt}
+{com}.         tempfile edu_sc
+{txt}
+{com}.         save `edu_sc'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_00324.00000d{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+. *********************************************************************************************************************
+. ** similarly tag the total overall popn obs 
+. *********************************************************************************************************************
+. 
+.         use "../08_temp/census2011_overall_edu_data.dta" , clear
+{txt}
+{com}.         drop __*
+{txt}
+{com}.         keep if tru == "Total"
+{txt}(1,280 observations deleted)
+
+{com}.         drop tru
+{txt}
+{com}. 
+.         egen matricplus_p = rowtotal(matric_p intermediate_p nontechdiploma_p techdiploma_p graduate_p)
+{txt}
+{com}. 
+. 
+.         foreach var of varlist total_p matricplus_p age0to14_p {c -(}
+{txt}  2{com}.                 rename `var' `var'_all
+{txt}  3{com}.         {c )-}
+{res}{txt}
+{com}. 
+.         ** merge all of these into one dataset
+. 
+.         merge 1:1 state_code district_code using `edu_st', keep(match master) assert(1 3) nogen
+{res}
+{txt}{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}              55
+{txt}{col 9}from master{col 30}{res}              55{txt}  
+{col 9}from using{col 30}{res}               0{txt}  
+
+{col 5}Matched{col 30}{res}             585{txt}  
+{col 5}{hline 41}
+
+{com}.         merge 1:1 state_code district_code using `edu_sc', keep(match master) assert(1 3) nogen
+{res}
+{txt}{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}              31
+{txt}{col 9}from master{col 30}{res}              31{txt}  
+{col 9}from using{col 30}{res}               0{txt}  
+
+{col 5}Matched{col 30}{res}             609{txt}  
+{col 5}{hline 41}
+
+{com}. 
+.         keep state_code district_code state district *_st *_sc *_all
+{txt}
+{com}. 
+. *********************************************************************************************************************
+. ** calculations to get non st/sc popn figures 
+. *********************************************************************************************************************
+. 
+.         egen total_p_scst = rowtotal(total_p_sc total_p_st)
+{txt}
+{com}.         egen matricplus_p_scst = rowtotal(matricplus_p_sc matricplus_p_st)
+{txt}
+{com}.         egen age0to14_p_scst = rowtotal(age0to14_p_st age0to14_p_sc)
+{txt}
+{com}. 
+.         ** *_gen corresponds to non sc/st popn figures (essentially subtract sc+st popn numbers from overall figures)
+. 
+.         gen total_p_gen = total_p_all - total_p_scst
+{txt}
+{com}.         gen matricplus_p_gen = matricplus_p_all - matricplus_p_scst
+{txt}
+{com}.         gen age0to14_p_gen = age0to14_p_all - age0to14_p_scst
+{txt}
+{com}. 
+.         ** gen dcode_2011 variable to merge with consistent regions file 
+.         gen double dcode_2011 = 201100000 + state_code*1000 + district_code
+{txt}
+{com}.         format dcode_2011 %9.0f
+{txt}
+{com}.         order dcode_2011, after(district_code)
+{txt}
+{com}.                 
+.         merge 1:1 dcode_2011 using "../03_processed/regions6113_with_dists_2011.dta"
+{res}
+{txt}{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}              35
+{txt}{col 9}from master{col 30}{res}               0{txt}  (_merge==1)
+{col 9}from using{col 30}{res}              35{txt}  (_merge==2)
+
+{col 5}Matched{col 30}{res}             640{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}.         keep if _merge == 3
+{txt}(35 observations deleted)
+
+{com}.         collapse (sum) *_all *_st *_sc *_scst *_gen, by(region6113 regionname6113)
+{res}{txt}
+{com}. 
+.         save "../08_temp/census2011_regions_edu_data.dta" , replace
+{txt}{p 0 4 2}
+file {bf}
+../08_temp/census2011_regions_edu_data.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. *********************************************************************************************************************
+. *** to calculate matricplus rate for non-big10-tribes in the selected regions 
+. ********************************************************************************************************************
+. 
+.         use "../03_processed/lang_workfile.dta", clear
+{txt}
+{com}.         drop if is_state | castegroup_1961_2011_code == 500 
+{txt}(660 observations deleted)
+
+{com}.         
+.         
+.         
+.         local religion hindus muslims christians buddhists jains sikhs other_persuasions religion_not_stated other_religions
+{txt}
+{com}.         
+.         foreach relg of local religion {c -(}
+{txt}  2{com}.                 egen agg_`relg'_p_1961 = rowtotal(agg_`relg'_m_1961 agg_`relg'_f_1961)
+{txt}  3{com}.         {c )-}
+{txt}
+{com}.         
+.         assert agg_other_religions_p_1961 == 0 if agg_other_persuasions_p_1961  > 0
+{txt}
+{com}.         assert agg_other_persuasions_p_1961 == 0 if agg_other_religions_p_1961  > 0
+{txt}
+{com}.         
+.         egen agg_other_beliefs_p_1961 = rowtotal(agg_other_religions_p_1961 agg_other_persuasions_p_1961)
+{txt}
+{com}.         rename agg_religion_not_stated_p_1961 agg_not_stated_p_1961
+{res}{txt}
+{com}.         
+.         local religion hindus muslims christians buddhists jains sikhs other_beliefs not_stated 
+{txt}
+{com}.         
+.         foreach relg of local religion {c -(}
+{txt}  2{com}.                 gen agg_`relg'_p_1961_perc = agg_`relg'_p_1961 / agg_total_p_1961 * 100 
+{txt}  3{com}.         {c )-}
+{txt}
+{com}.         
+.         
+. 
+.         keep region6113 castegroup_1961_2011_code total_p_2011 matricplus_p_2011 age0to14_p_2011 *_perc 
+{txt}
+{com}.         merge m:1 region6113 using "../08_temp/census2011_regions_edu_data.dta"
+{res}
+{txt}{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}              75
+{txt}{col 9}from master{col 30}{res}               0{txt}  (_merge==1)
+{col 9}from using{col 30}{res}              75{txt}  (_merge==2)
+
+{col 5}Matched{col 30}{res}           2,255{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}.         keep if _merge == 3
+{txt}(75 observations deleted)
+
+{com}.         drop _merge
+{txt}
+{com}. 
+.         ** creating the required variables 
+. 
+.         gen matricplus_rate_2011_sc =  matricplus_p_sc/ (total_p_sc - age0to14_p_sc) * 100 //matricplus rate for scs
+{txt}(11 missing values generated)
+
+{com}.         gen matricplus_rate_2011_nonscst = matricplus_p_gen/(total_p_gen - age0to14_p_gen) * 100 //matricplus rate for non-sc/st 
+{txt}
+{com}.         gen matricplus_rate_2011_st = matricplus_p_st/(total_p_st - age0to14_p_st) * 100 
+{txt}
+{com}. 
+.         gen popn_share_sc = total_p_sc/total_p_all * 100 // share of sc of overall popn in region 
+{txt}
+{com}.         gen popn_share_st_totpopn = total_p_st/total_p_all * 100 // share of all st of total popn in region
+{txt}
+{com}.         gen popn_share_tribe_totst = total_p_2011/total_p_st * 100 // perc of tribe as a fraction of all sts in the region 
+{txt}
+{com}.         gen popn_share_tribe = total_p_2011/total_p_all * 100 
+{txt}
+{com}.         gen popn_share_nonscst = total_p_gen/total_p_all * 100 
+{txt}
+{com}. 
+. 
+. *********************************************************************************************************************
+. ** consolidating with earlier region table
+. *********************************************************************************************************************
+. 
+.         merge 1:1 castegroup_1961_2011_code regionname6113 using "../08_temp/census2011_regions_table.dta"
+{res}{txt}(label {bf:{txt}CASTE_GROUPS_1961_2011} already defined)
+
+{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}           2,206
+{txt}{col 9}from master{col 30}{res}           2,206{txt}  (_merge==1)
+{col 9}from using{col 30}{res}               0{txt}  (_merge==2)
+
+{col 5}Matched{col 30}{res}              49{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. 
+.         
+.         gen nontribe_matricplus_p = matricplus_p_st - matricplus_p_2011 //excluding matric+ numbers of those belonging to big10 tribe
+{txt}
+{com}.         gen nontribe_age0to14_p = age0to14_p_st - age0to14_p_2011 //excluding age 0to14 popn numbers of those belonging to big10 tribe
+{txt}
+{com}.         gen nontribe_total_p = total_p_st - total_p_2011
+{txt}
+{com}.         
+.         
+.         gen popn_share_nontribe = nontribe_total_p/total_p_all * 100 
+{txt}
+{com}.         gen matricplus_rate_2011_nontribe = nontribe_matricplus_p/(nontribe_total_p - nontribe_age0to14_p) * 100
+{txt}
+{com}.         keep if _merge == 3
+{txt}(2,206 observations deleted)
+
+{com}. 
+.         keep state_2011 regionname6113 castegroup_1961_2011_code national_tribe_perc region_tribe_perc ///
+>         matricplus_rate_2011_perc literacy_rate_2011_perc medinstr11 medium_perc1 medinstr12 medium_perc2 ///
+>         mothertongue1 lang_perc1 mothertongue2 lang_perc2 mothertongue3 lang_perc3 ///
+>         matricplus_rate_2011_sc matricplus_rate_2011_nonscst popn_share_sc popn_share_st_totpopn ///
+>         popn_share_tribe_totst matricplus_rate_2011_nontribe popn_share_nontribe ///
+>         popn_share_tribe popn_share_nonscst matricplus_rate_2011_st *_perc 
+{txt}
+{com}. 
+. 
+.         format matricplus_rate_2011_sc matricplus_rate_2011_nonscst popn_share_sc popn_share_st_totpopn popn_share_tribe_totst matricplus_rate_2011_nontribe popn_share_nontribe popn_share_tribe popn_share_nonscst matricplus_rate_2011_st *_perc %5.2f
+{txt}
+{com}.         
+.         gsort -national_tribe_perc -region_tribe_perc  
+{txt}
+{com}.         
+.         order castegroup_1961_2011_code regionname6113 state_2011 national_tribe_perc
+{txt}
+{com}.         order popn_share_tribe_totst popn_share_tribe, after(region_tribe_perc)
+{txt}
+{com}.         order popn_share_nontribe matricplus_rate_2011_nontribe popn_share_st_totpopn matricplus_rate_2011_st popn_share_sc matricplus_rate_2011_sc popn_share_nonscst matricplus_rate_2011_nonscst, after(literacy_rate_2011_perc)
+{txt}
+{com}.         order agg_*, after (lang_perc3)
+{txt}
+{com}.         
+.         
+.         export excel using "../04_results/03_excel_tables/region_table.xls", firstrow(variables) replace
+{res}{txt}file {bf:../04_results/03_excel_tables/region_table.xls} saved
+
+{com}.         
+.         
+. project , creates("../08_temp/census2011_regions_table.dta")
+{txt}project version2_tribe_language > do-file creates: {res}"08_temp/census2011_regions_table.dta" filesig(2284180211:39830){txt}
+
+{com}. project , creates("../08_temp/census2011_regions_edu_data.dta")
+{txt}project version2_tribe_language > do-file creates: {res}"08_temp/census2011_regions_edu_data.dta" filesig(2513516866:75721){txt}
+
+{com}. project , creates("../04_results/03_excel_tables/region_table.xls")
+{txt}project version2_tribe_language > do-file creates: {res}"04_results/03_excel_tables/region_table.xls" filesig(1531595309:40448){txt}
+
+{com}.         
+.         
+.         
+. 
+{txt}end of do-file
+      name:  {res}plog_894
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/2.10_make_excel_region_tables.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}16 Nov 2021, 12:41:46
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

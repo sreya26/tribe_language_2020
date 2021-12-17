@@ -1,0 +1,153 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}plog_834
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/2.08_make_subsi_regression_tables.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}16 Nov 2021, 12:38:53
+{txt}
+{com}. project , uses("../03_processed/lang_workfile.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"03_processed/lang_workfile.dta" filesig(4101914903:5173431){txt}
+
+{com}. 
+. *********************************************************************************************************************
+. * this do-file makes regression tables controlling for subsidiary language speakers, for the tribelanguage paper
+. *********************************************************************************************************************
+.         
+.         use "../03_processed/lang_workfile", clear
+{txt}
+{com}. 
+.         gen subsi_dominant_frac = subsi_speakers_of_dominant_lang/total_speakers
+{txt}
+{com}.         label var subsi_dominant_frac "Dominant language as subsidiary (fraction)"
+{txt}
+{com}.         
+.         drop if inlist(castegroup_1961_2011_code,500) | is_state // also exclude General Castes (990)?
+{txt}(660 observations deleted)
+
+{com}. 
+.         label var literacy_rate_1961 "Literacy, 1961"
+{txt}
+{com}.         label var primaryplus_rate_1961 "Primary schooling, 1961"
+{txt}
+{com}.         label var matricplus_rate_1961 "Secondary schooling, 1961"
+{txt}
+{com}.         
+.         local dist_types f8 tj as
+{txt}
+{com}. 
+. 
+.         local match_to dominant // dominant modal enrol_st schools_all enrol_all
+{txt}
+{com}. 
+.         local areas all protected unprotected // scheduled tribal 
+{txt}
+{com}.         
+.         foreach area of local areas {c -(}
+{txt}  2{com}.                 if "`area'" == "all" local ifcond
+{txt}  3{com}.                         else if "`area'" == "scheduled" local ifcond "if scheduledarea6113~=0"
+{txt}  4{com}.                                 else if "`area'" == "tribal" local ifcond "if tribalarea6113~=0"
+{txt}  5{com}.                                         else if "`area'" == "protected" local ifcond "if scheduledarea6113~=0 | tribalarea6113~=0"
+{txt}  6{com}.                                                 else if "`area'" == "unprotected" local ifcond "if scheduledarea6113 == 0 & tribalarea6113==0"
+{txt}  7{com}.                                 
+.                 foreach dtype of local dist_types {c -(}
+{txt}  8{com}.                         foreach type of local match_to {c -(}
+{txt}  9{com}.                                 egen lang_dist_normalized = std(wt_lang_dist_`dtype'_`type') `ifcond'
+{txt} 10{com}.                                 label var lang_dist_normalized "Distance"
+{txt} 11{com}.                                 gen lang_dist_norm_sq = lang_dist_normalized^2
+{txt} 12{com}.                                 label var lang_dist_norm_sq "Distance\$^2\$"
+{txt} 13{com}.                                 local basic_x lang_dist_normalized lang_dist_norm_sq subsi_dominant_frac i.castegroup_1961_2011_code i.region6113
+{txt} 14{com}.                                 label var wt_lang_dist_`dtype'_`type' "Language Distance"
+{txt} 15{com}. 
+.                                 eststo LITERACY_Y61, title("Literacy"): qui regress literacy_rate_2011 `basic_x' literacy_rate_1961 `ifcond', robust
+{txt} 16{com}.                                 eststo PRIMARYPLUS_Y61, title("Primary"): qui regress primaryplus_rate_2011 `basic_x' literacy_rate_1961 `ifcond', robust
+{txt} 17{com}.                                 eststo MIDDLEPLUS_Y61, title("Middle"): qui regress middleplus_rate_2011 `basic_x' literacy_rate_1961 `ifcond', robust
+{txt} 18{com}.                                 eststo MATRICPLUS_Y61, title("Matric"): qui regress matricplus_rate_2011 `basic_x' literacy_rate_1961 `ifcond', robust
+{txt} 19{com}.                                 eststo GRADUATE_Y61, title("Graduate"): qui regress graduate_rate_2011 `basic_x' literacy_rate_1961 `ifcond', robust
+{txt} 20{com}. 
+.                                 eststo PRIMARYPLUS_Y61_v2, title("Primary"): qui regress primaryplus_rate_2011 `basic_x' primaryplus_rate_1961 `ifcond', robust
+{txt} 21{com}.                                 eststo MIDDLEPLUS_Y61_v2, title("Middle"): qui regress middleplus_rate_2011 `basic_x' primaryplus_rate_1961 `ifcond', robust
+{txt} 22{com}.                                 eststo MATRICPLUS_Y61_v2, title("Matric"): qui regress matricplus_rate_2011 `basic_x' matricplus_rate_1961 `ifcond', robust
+{txt} 23{com}.                                 eststo GRADUATE_Y61_v2, title("Graduate"): qui regress graduate_rate_2011 `basic_x' matricplus_rate_1961 `ifcond', robust
+{txt} 24{com}.                                 
+.                                 #delimit ;
+{txt}delimiter now ;
+{com}.                                 esttab LITERACY_Y61 PRIMARYPLUS_Y61 MIDDLEPLUS_Y61 MATRICPLUS_Y61 GRADUATE_Y61
+>                                         using "../04_results/01_tables/8_subsi_reg_`type'_`dtype'_`area'.tex", replace
+>                                         booktabs
+>                                         nobase nonumbers mtitles label b(3) se star(* 0.10 ** 0.05 *** 0.01) stats(N, fmt(%18.0gc) labels(`"Observations"') layout({c -(}@{c )-}))
+>                                         drop(*castegroup_1961_2011_code* *region6113*)
+>                                         nonotes
+>                                         addnotes("Heteroskedasticity-robust standard errors in parentheses." "\sym{c -(}*{c )-} \(p<0.10\), \sym{c -(}**{c )-} \(p<0.05\), \sym{c -(}***{c )-} \(p<0.01\)")
+>                                 ;
+{txt} 25{com}.                                 #delimit cr
+{txt}delimiter now cr
+{com}. 
+.                                 #delimit ;
+{txt}delimiter now ;
+{com}.                                 esttab LITERACY_Y61 PRIMARYPLUS_Y61_v2 MIDDLEPLUS_Y61_v2 MATRICPLUS_Y61_v2 GRADUATE_Y61_v2
+>                                         using "../04_results/01_tables/8_subsi_reg_`type'_`dtype'_`area'_v2.tex", replace
+>                                         booktabs
+>                                         nobase nonumbers mtitles label b(3) se star(* 0.10 ** 0.05 *** 0.01) stats(N, fmt(%18.0gc) labels(`"Observations"') layout({c -(}@{c )-}))
+>                                         drop(*castegroup_1961_2011_code* *region6113*)
+>                                         nonotes
+>                                         addnotes("Heteroskedasticity-robust standard errors in parentheses." "\sym{c -(}*{c )-} \(p<0.10\), \sym{c -(}**{c )-} \(p<0.05\), \sym{c -(}***{c )-} \(p<0.01\)")
+>                                 ;
+{txt} 26{com}.                                 #delimit cr
+{txt}delimiter now cr
+{com}.                                 
+.                                 drop lang_dist_normalized 
+{txt} 27{com}.                                 cap drop lang_dist_norm_sq
+{txt} 28{com}.                                 {c )-}
+{txt} 29{com}.                         {c )-}
+{txt} 30{com}.         {c )-}
+{res}{txt}(output written to {browse  `"../04_results/01_tables/8_subsi_reg_dominant_f8_all.tex"'})
+{res}{txt}(output written to {browse  `"../04_results/01_tables/8_subsi_reg_dominant_f8_all_v2.tex"'})
+{res}{txt}(output written to {browse  `"../04_results/01_tables/8_subsi_reg_dominant_tj_all.tex"'})
+{res}{txt}(output written to {browse  `"../04_results/01_tables/8_subsi_reg_dominant_tj_all_v2.tex"'})
+{res}{txt}(output written to {browse  `"../04_results/01_tables/8_subsi_reg_dominant_as_all.tex"'})
+{res}{txt}(output written to {browse  `"../04_results/01_tables/8_subsi_reg_dominant_as_all_v2.tex"'})
+(1,271 missing values generated)
+(1,271 missing values generated)
+{res}{txt}(output written to {browse  `"../04_results/01_tables/8_subsi_reg_dominant_f8_protected.tex"'})
+{res}{txt}(output written to {browse  `"../04_results/01_tables/8_subsi_reg_dominant_f8_protected_v2.tex"'})
+(1,271 missing values generated)
+(1,271 missing values generated)
+{res}{txt}(output written to {browse  `"../04_results/01_tables/8_subsi_reg_dominant_tj_protected.tex"'})
+{res}{txt}(output written to {browse  `"../04_results/01_tables/8_subsi_reg_dominant_tj_protected_v2.tex"'})
+(1,271 missing values generated)
+(1,271 missing values generated)
+{res}{txt}(output written to {browse  `"../04_results/01_tables/8_subsi_reg_dominant_as_protected.tex"'})
+{res}{txt}(output written to {browse  `"../04_results/01_tables/8_subsi_reg_dominant_as_protected_v2.tex"'})
+(984 missing values generated)
+(984 missing values generated)
+{res}{txt}(output written to {browse  `"../04_results/01_tables/8_subsi_reg_dominant_f8_unprotected.tex"'})
+{res}{txt}(output written to {browse  `"../04_results/01_tables/8_subsi_reg_dominant_f8_unprotected_v2.tex"'})
+(984 missing values generated)
+(984 missing values generated)
+{res}{txt}(output written to {browse  `"../04_results/01_tables/8_subsi_reg_dominant_tj_unprotected.tex"'})
+{res}{txt}(output written to {browse  `"../04_results/01_tables/8_subsi_reg_dominant_tj_unprotected_v2.tex"'})
+(984 missing values generated)
+(984 missing values generated)
+{res}{txt}(output written to {browse  `"../04_results/01_tables/8_subsi_reg_dominant_as_unprotected.tex"'})
+{res}{txt}(output written to {browse  `"../04_results/01_tables/8_subsi_reg_dominant_as_unprotected_v2.tex"'})
+
+{com}. 
+. 
+. project , creates("../04_results/01_tables/8_subsi_reg_dominant_f8_all.tex")
+{txt}project version2_tribe_language > do-file creates: {res}"04_results/01_tables/8_subsi_reg_dominant_f8_all.tex" filesig(3177164940:2022){txt}
+
+{com}. project , creates("../04_results/01_tables/8_subsi_reg_dominant_f8_protected.tex")
+{txt}project version2_tribe_language > do-file creates: {res}"04_results/01_tables/8_subsi_reg_dominant_f8_protected.tex" filesig(4059661444:2022){txt}
+
+{com}. project , creates("../04_results/01_tables/8_subsi_reg_dominant_f8_unprotected.tex")
+{txt}project version2_tribe_language > do-file creates: {res}"04_results/01_tables/8_subsi_reg_dominant_f8_unprotected.tex" filesig(202760759:2022){txt}
+
+{com}. 
+{txt}end of do-file
+      name:  {res}plog_834
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/2.08_make_subsi_regression_tables.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}16 Nov 2021, 12:41:43
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

@@ -42,9 +42,11 @@ project , do("1.04b_edu_religion_1961_merge.do")
 * Step #5
 * this portion appends the original census 2011 education files for individual Scheduled Tribes at the state and district level
 * it then combines and retains the relevant parts of the census 2011 education files (i.e. education levels + age groups 
+* it also appends the original census 2011 education files for all Scheduled Caste and Overall Popn at the state and district level 
 
 project , do("1.05a_append_census2011_st_edu_files.do")
 project , do("1.05b_combine_census2011_st_edu_files.do")
+project , do("1.05c_append_combine_census2011_overall_sc_files.do")
 
 ************************************************************************************************************************************
 * Step #6
@@ -105,7 +107,10 @@ project , do("1.11_apply_linguistic_distance_to_census1961_language_data.do")
 * this portion takes the Census 2011 ST education data for individual tribes, attaches tribal group codes 
 * the data is collapsed to regions with consistent boundaries between 1961-2013.
 
-project , do("1.12_prepare_census2011_st_edu_data.do")
+project , do("1.12a_prepare_census2011_st_edu_data.do")
+project , do("1.12b_combine_census2011_agg_edu_religion_files.do")
+
+
 ************************************************************************************************************************************
 
 ************************************************************************************************************************************

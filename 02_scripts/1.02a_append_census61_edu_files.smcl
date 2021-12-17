@@ -1,0 +1,2281 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}plog_770
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/1.02a_append_census61_edu_files.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 6 Sep 2021, 20:07:16
+{txt}
+{com}.  ************************************************************************************************************************
+. * this file appends the xlsx files that contain education levels for STs in Census 1961
+. * into a single dataset
+. ************************************************************************************************************************
+. 
+. local census_61_edu_folder "../01_data/census_1961_st_education_tables"
+{txt}
+{com}. local st_edu_61_files: dir "`census_61_edu_folder'" files "??stedu?61.xlsx"  
+{txt}
+{com}. 
+. foreach file of local st_edu_61_files {c -(}
+{txt}  2{com}.         project , original("`census_61_edu_folder'/`file'")             
+{txt}  3{com}. {c )-} 
+{txt}project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/mpsteduu61.xlsx" filesig(4099304560:45225){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/mhsteduu61.xlsx" filesig(747334872:29134){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/ktsteduu61.xlsx" filesig(1153737043:22352){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/hpstedur61.xlsx" filesig(3823312898:5977){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/wbstedur61.xlsx" filesig(1926813858:28919){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/orsteduu61.xlsx" filesig(2326623040:24790){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/mnsteduu61.xlsx" filesig(3682502594:15654){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/pnstedur61.xlsx" filesig(4215837537:3593){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/gjstedur61.xlsx" filesig(3939876469:21666){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/tnstedur61.xlsx" filesig(2543834333:10167){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/anstedur61.xlsx" filesig(280387463:3679){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/rjstedur61.xlsx" filesig(1233188408:12497){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/trsteduu61.xlsx" filesig(2982738390:13389){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/assteduu61.xlsx" filesig(2016028744:24033){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/apstedur61.xlsx" filesig(3634628063:20907){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/ngstedur61.xlsx" filesig(2996135119:5716){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/brsteduu61.xlsx" filesig(2467298916:32847){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/kestedur61.xlsx" filesig(967480620:14565){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/gjsteduu61.xlsx" filesig(2323855520:30267){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/tnsteduu61.xlsx" filesig(4111185752:11713){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/rjsteduu61.xlsx" filesig(605662036:11746){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/trstedur61.xlsx" filesig(1025010839:22403){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/asstedur61.xlsx" filesig(506390101:15498){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/apsteduu61.xlsx" filesig(2894285802:18287){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/dnstedur61.xlsx" filesig(3850585599:3249){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/brstedur61.xlsx" filesig(2713338746:30518){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/ngsteduu61.xlsx" filesig(1142166767:5220){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/kesteduu61.xlsx" filesig(3118470571:10125){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/mpstedur61.xlsx" filesig(2045003851:53730){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/mhstedur61.xlsx" filesig(2972032998:31443){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/ktstedur61.xlsx" filesig(943604275:22874){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/lmstedur61.xlsx" filesig(2277411032:9889){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/hpsteduu61.xlsx" filesig(1866328142:5512){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/wbsteduu61.xlsx" filesig(4255083082:25777){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/orstedur61.xlsx" filesig(2909291524:38493){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_st_education_tables/mnstedur61.xlsx" filesig(2517572790:26481){txt}
+
+{com}. 
+. ******************************************************************************************************
+. * 1. import and append the original excel data files
+. ******************************************************************************************************
+. 
+.         save "../08_temp/census1961_st_edu_data", emptyok replace
+{txt}(dataset contains 0 observations)
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+
+{com}. 
+.         local states an ap as br dn gj hp ke kt mh mp mn lm ng or pn rj tn tr wb
+{txt}
+{com}. 
+.         foreach st of local states {c -(}
+{txt}  2{com}.                 capture confirm file "`census_61_edu_folder'/`st'stedur61.xlsx"
+{txt}  3{com}.                 if _rc {c -(}
+{txt}  4{com}.                         dis as error "Could not locate the rural file for state `st'."
+{txt}  5{com}.                         continue
+{txt}  6{com}.                         {c )-}
+{txt}  7{com}.                 import excel using "`census_61_edu_folder'/`st'stedur61.xlsx", firstrow case(lower) clear
+{txt}  8{com}.                 destring totalm-matricf, replace
+{txt}  9{com}.                 replace area = "rural"
+{txt} 10{com}.                 append using "../08_temp/census1961_st_edu_data"
+{txt} 11{com}.                 save "../08_temp/census1961_st_edu_data", replace
+{txt} 12{com}. 
+.                 capture confirm file "`census_61_edu_folder'/`st'steduu61.xlsx"
+{txt} 13{com}.                 if _rc {c -(}
+{txt} 14{com}.                         dis as error "Could not locate the urban file for state `st'."
+{txt} 15{com}.                         continue
+{txt} 16{com}.                         {c )-}
+{txt} 17{com}.                 import excel using "`census_61_edu_folder'/`st'steduu61.xlsx", firstrow case(lower) clear
+{txt} 18{com}.                 destring totalm-degreetf, replace
+{txt} 19{com}.                 replace area = "urban"
+{txt} 20{com}.                 append using "../08_temp/census1961_st_edu_data"
+{txt} 21{com}.                 save "../08_temp/census1961_st_edu_data", replace
+{txt} 22{com}.                 {c )-}
+{res}{text}(18 vars, 14 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{err}Could not locate the urban file for state an.
+{res}{text}(17 vars, 255 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str14}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str14}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(25 vars, 181 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}diplomatm already numeric; no {res}replace
+{txt}diplomatf already numeric; no {res}replace
+{txt}diplomantm already numeric; no {res}replace
+{txt}diplomantf already numeric; no {res}replace
+{txt}degreentm already numeric; no {res}replace
+{txt}degreentf already numeric; no {res}replace
+{txt}degreetm already numeric; no {res}replace
+{txt}degreetf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str14}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str14}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratem} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratef} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(19 vars, 146 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str5}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(27 vars, 130 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}diplomantm already numeric; no {res}replace
+{txt}diplomantf already numeric; no {res}replace
+{txt}diplomatm already numeric; no {res}replace
+{txt}diplomatf already numeric; no {res}replace
+{txt}degreentm already numeric; no {res}replace
+{txt}degreentf already numeric; no {res}replace
+{txt}degreetm already numeric; no {res}replace
+{txt}degreetf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str5}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratem} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratef} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(19 vars, 358 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str5}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str20}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str20}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(27 vars, 319 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}diplomatm already numeric; no {res}replace
+{txt}diplomatf already numeric; no {res}replace
+{txt}diplomantm already numeric; no {res}replace
+{txt}diplomantf already numeric; no {res}replace
+{txt}degreentm already numeric; no {res}replace
+{txt}degreentf already numeric; no {res}replace
+{txt}degreetm already numeric; no {res}replace
+{txt}degreetf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str5}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str20}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str20}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(17 vars, 8 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str22}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str22}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str26}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratem} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratef} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{err}Could not locate the urban file for state dn.
+{res}{text}(19 vars, 239 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str7}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str15}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str152}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(27 vars, 184 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}diplomantm already numeric; no {res}replace
+{txt}diplomantf already numeric; no {res}replace
+{txt}diplomatm already numeric; no {res}replace
+{txt}diplomatf already numeric; no {res}replace
+{txt}degreentm already numeric; no {res}replace
+{txt}degreentf already numeric; no {res}replace
+{txt}degreetm already numeric; no {res}replace
+{txt}degreetf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str7}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str15}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str152}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(17 vars, 49 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str16}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str16}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str35}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratem} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratef} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(25 vars, 36 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}diplomantm already numeric; no {res}replace
+{txt}diplomantf already numeric; no {res}replace
+{txt}diplomatm already numeric; no {res}replace
+{txt}diplomatf already numeric; no {res}replace
+{txt}degreentm already numeric; no {res}replace
+{txt}degreentf already numeric; no {res}replace
+{txt}degreetm already numeric; no {res}replace
+{txt}degreetf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str16}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str16}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str35}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalf} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratem} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratef} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(17 vars, 169 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str6}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str10}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str28}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(25 vars, 88 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}diplomatm already numeric; no {res}replace
+{txt}diplomatf already numeric; no {res}replace
+{txt}diplomantm already numeric; no {res}replace
+{txt}diplomantf already numeric; no {res}replace
+{txt}degreentm already numeric; no {res}replace
+{txt}degreentf already numeric; no {res}replace
+{txt}degreetm already numeric; no {res}replace
+{txt}degreetf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str6}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str10}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str23}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratem} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratef} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(17 vars, 174 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str6}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str15}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str152}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(25 vars, 136 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}diplomatm already numeric; no {res}replace
+{txt}diplomatf already numeric; no {res}replace
+{txt}diplomantm already numeric; no {res}replace
+{txt}diplomantf already numeric; no {res}replace
+{txt}degreentm already numeric; no {res}replace
+{txt}degreentf already numeric; no {res}replace
+{txt}degreetm already numeric; no {res}replace
+{txt}degreetf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str6}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str15}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str152}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratem} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratef} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(19 vars, 365 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str11}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str19}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str523}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(27 vars, 274 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}diplomatm already numeric; no {res}replace
+{txt}diplomatf already numeric; no {res}replace
+{txt}diplomantm already numeric; no {res}replace
+{txt}diplomantf already numeric; no {res}replace
+{txt}degreentm already numeric; no {res}replace
+{txt}degreentf already numeric; no {res}replace
+{txt}degreetm already numeric; no {res}replace
+{txt}degreetf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str11}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str19}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str523}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(19 vars, 655 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str14}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str17}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str523}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(27 vars, 451 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}diplomatm already numeric; no {res}replace
+{txt}diplomatf already numeric; no {res}replace
+{txt}diplomantm already numeric; no {res}replace
+{txt}diplomantf already numeric; no {res}replace
+{txt}degreentm already numeric; no {res}replace
+{txt}degreentf already numeric; no {res}replace
+{txt}degreetm already numeric; no {res}replace
+{txt}degreetf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str14}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str17}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str523}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratem} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(19 vars, 201 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str7}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str17}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str24}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratem} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratef} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(26 vars, 72 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}diplomantm already numeric; no {res}replace
+{txt}diplomantf already numeric; no {res}replace
+{txt}diplomatm already numeric; no {res}replace
+{txt}diplomatf already numeric; no {res}replace
+{txt}degreentm already numeric; no {res}replace
+{txt}degreentf already numeric; no {res}replace
+{txt}degreetm already numeric; no {res}replace
+{txt}degreetf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str7}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str31}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str24}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratem} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratef} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(19 vars, 11 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str115}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratem} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratef} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{err}Could not locate the urban file for state lm.
+{res}{text}(17 vars, 39 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str8}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str10}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str598}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(25 vars, 24 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}diplomantm already numeric; no {res}replace
+{txt}diplomantf already numeric; no {res}replace
+{txt}diplomatm already numeric; no {res}replace
+{txt}diplomatf already numeric; no {res}replace
+{txt}degreentm already numeric; no {res}replace
+{txt}degreentf already numeric; no {res}replace
+{txt}degreetm already numeric; no {res}replace
+{txt}degreetf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str8}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str10}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str598}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratem} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratef} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(17 vars, 514 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str6}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str15}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str64}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(25 vars, 259 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}diplomatm already numeric; no {res}replace
+{txt}diplomatf already numeric; no {res}replace
+{txt}diplomantm already numeric; no {res}replace
+{txt}diplomantf already numeric; no {res}replace
+{txt}degreentm already numeric; no {res}replace
+{txt}degreentf already numeric; no {res}replace
+{txt}degreetm already numeric; no {res}replace
+{txt}degreetf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str6}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str15}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str64}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(19 vars, 12 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str6}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str18}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str20}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratem} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratef} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{err}Could not locate the urban file for state pn.
+{res}{text}(17 vars, 134 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str9}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str14}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str34}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(25 vars, 102 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}diplomatm already numeric; no {res}replace
+{txt}diplomatf already numeric; no {res}replace
+{txt}diplomantm already numeric; no {res}replace
+{txt}diplomantf already numeric; no {res}replace
+{txt}degreentm already numeric; no {res}replace
+{txt}degreentf already numeric; no {res}replace
+{txt}degreetm already numeric; no {res}replace
+{txt}degreetf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str9}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str14}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str34}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratem} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratef} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(17 vars, 107 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str6}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str14}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str21}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(25 vars, 106 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}diplomantm already numeric; no {res}replace
+{txt}diplomantf already numeric; no {res}replace
+{txt}diplomatm already numeric; no {res}replace
+{txt}diplomatf already numeric; no {res}replace
+{txt}degreentm already numeric; no {res}replace
+{txt}degreentf already numeric; no {res}replace
+{txt}degreetm already numeric; no {res}replace
+{txt}degreetf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str6}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str15}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str21}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratem} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratef} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(18 vars, 165 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str7}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str25}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str27}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(26 vars, 49 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}diplomantm already numeric; no {res}replace
+{txt}diplomantf already numeric; no {res}replace
+{txt}diplomatm already numeric; no {res}replace
+{txt}diplomatf already numeric; no {res}replace
+{txt}degreentm already numeric; no {res}replace
+{txt}degreentf already numeric; no {res}replace
+{txt}degreetm already numeric; no {res}replace
+{txt}degreetf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str7}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str25}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str27}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratem} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratef} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(19 vars, 339 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str11}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str19}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str64}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+{res}{text}(27 vars, 248 obs)
+totalm already numeric; no {res}replace
+{txt}totalf already numeric; no {res}replace
+{txt}illiteratem already numeric; no {res}replace
+{txt}illiteratef already numeric; no {res}replace
+{txt}literatenoedm already numeric; no {res}replace
+{txt}literatenoedf already numeric; no {res}replace
+{txt}primarym already numeric; no {res}replace
+{txt}primaryf already numeric; no {res}replace
+{txt}matricm already numeric; no {res}replace
+{txt}matricf already numeric; no {res}replace
+{txt}diplomantm already numeric; no {res}replace
+{txt}diplomantf already numeric; no {res}replace
+{txt}diplomatm already numeric; no {res}replace
+{txt}diplomatf already numeric; no {res}replace
+{txt}degreentm already numeric; no {res}replace
+{txt}degreentf already numeric; no {res}replace
+{txt}degreetm already numeric; no {res}replace
+{txt}degreetf already numeric; no {res}replace
+{txt}(0 real changes made)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str11}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str19}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:tribe} was {bf:str64}, now {bf:str600} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:totalf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratem} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:illiteratef} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedm} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:literatenoedf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primarym} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:primaryf} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:matricf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentm} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:degreentf} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+
+{com}.   
+. ******************************************************************************************************
+. * 2. make the matric variable comparable across rural and urban areas
+. ******************************************************************************************************
+. 
+.         use "../08_temp/census1961_st_edu_data", clear
+{txt}
+{com}. 
+.         foreach var in state district tribe scst area {c -(}
+{txt}  2{com}.                 replace `var' = trim(itrim(`var'))
+{txt}  3{com}.                 {c )-}
+{txt}(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+{com}. 
+.         egen matricplusm = rowtotal(matricm diplomantm diplomatm degreentm degreetm) if area == "urban"
+{txt}(3,954 missing values generated)
+
+{com}.         egen matricplusf = rowtotal(matricf diplomantf diplomatf degreentf degreetf) if area == "urban"
+{txt}(3,954 missing values generated)
+
+{com}. 
+.         replace matricm = matricplusm if area == "urban"
+{txt}(1,156 real changes made)
+
+{com}.         replace matricf = matricplusf if area == "urban"
+{txt}(1,149 real changes made)
+
+{com}. 
+.         drop diploma* degree* matricplus*
+{txt}
+{com}. 
+. ******************************************************************************************************
+. * 3. miscellaneous clean-ups
+. ******************************************************************************************************
+.         
+.         
+.         assert scst == "st"
+{txt}
+{com}.         drop scst
+{txt}
+{com}. 
+.         foreach var of varlist totalm-matricf {c -(}
+{txt}  2{com}.                 replace `var' = 0 if missing(`var')
+{txt}  3{com}.         {c )-}
+{txt}(128 real changes made)
+(371 real changes made)
+(642 real changes made)
+(845 real changes made)
+(672 real changes made)
+(1,294 real changes made)
+(1,017 real changes made)
+(1,779 real changes made)
+(1,280 real changes made)
+(1,848 real changes made)
+
+{com}. 
+.         drop if totalm == 0 & totalf == 0
+{txt}(49 observations deleted)
+
+{com}. 
+.         sort state district tribe area
+{txt}
+{com}.         
+.         compress
+{txt}  (0 bytes saved)
+
+{com}.         
+.         save "../08_temp/census1961_st_edu_data", replace
+{txt}{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_data.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. project , creates("../08_temp/census1961_st_edu_data.dta")
+{txt}project version2_tribe_language > do-file creates: {res}"08_temp/census1961_st_edu_data.dta" filesig(2802879694:4878559){txt}
+
+{com}. 
+{txt}end of do-file
+      name:  {res}plog_770
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/1.02a_append_census61_edu_files.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res} 6 Sep 2021, 20:07:21
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

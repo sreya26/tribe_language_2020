@@ -1,0 +1,179 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}plog_772
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/1.02b_apply_district_codes_to_census61_edu_data.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 6 Sep 2021, 20:07:21
+{txt}
+{com}. ************************************************************************************************************************
+. * this file takes the ST education data for individual tribe levels from Census 1961
+. * and gives them district and caste [group] codes 
+. ************************************************************************************************************************
+. 
+. local parentfile_1961_2011 "../01_data/census_boundaries_data/District Boundary Changes 1961-2011.xlsx"
+{txt}
+{com}. 
+. project , original("`parentfile_1961_2011'")
+{txt}project version2_tribe_language > do-file uses original: {res}"01_data/census_boundaries_data/District Boundary Changes 1961-2011.xlsx" filesig(262706738:905247){txt}
+
+{com}. project , uses("../08_temp/census1961_st_edu_data.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"08_temp/census1961_st_edu_data.dta" filesig(2802879694:4878559){txt}
+
+{com}. 
+. 
+. ************************************************************************************************************************
+. * 1. import list of 1961 states and districts with codes 
+. ************************************************************************************************************************
+. 
+.         import excel using "`parentfile_1961_2011'", sheet("census1961") firstrow case(lower) clear     
+{res}{text}(5 vars, 376 obs)
+
+{com}.         rename *1961 *_1961
+{res}{txt}
+{com}.         
+.         tempfile census_1961
+{txt}
+{com}.         save `census_1961'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_13929.000006{rm}
+saved
+as .dta format
+{p_end}
+
+{com}.         
+. ************************************************************************************************************************
+. * 2. fix states and districts in 1961 ST education data, and give them codes 
+. ************************************************************************************************************************
+.         
+.         use "../08_temp/census1961_st_edu_data.dta", clear
+{txt}
+{com}. 
+.         replace district = "Manipur" if district == "Imphal Town" // fixing urban tables of Manipur
+{txt}(24 real changes made)
+
+{com}.         replace district = "Imphal East" if district == "Imphal Town Part Of Imphal East"
+{txt}(11 real changes made)
+
+{com}.         replace district = "Imphal West" if district == "Imphal Town Part Of Imphal West"
+{txt}(24 real changes made)
+
+{com}. 
+. 
+.         replace district = subinstr(district,"Sub Division","Sub-Division",1) if state == "Tripura"
+{txt}(182 real changes made)
+
+{com}. 
+.         rename state state_1961
+{res}{txt}
+{com}.         rename district district_1961
+{res}{txt}
+{com}. 
+.         drop if strpos(district_1961," Division")>0
+{txt}(779 observations deleted)
+
+{com}. 
+.         * there is no point keeping those areas of Andamans, Lakshadweep, Tripura and Manipur that are not "districts" in our district-boundaries data
+.         drop if district_1961~= "Andaman & Nicobar Islands" & state_1961 == "Andaman & Nicobar Islands"
+{txt}(9 observations deleted)
+
+{com}.         drop if district_1961~= "Tripura" & state_1961 == "Tripura"
+{txt}(182 observations deleted)
+
+{com}.         drop if inlist(district_1961,"Mao","Sadar Hills") & state_1961 == "Manipur"
+{txt}(27 observations deleted)
+
+{com}.         drop if island ~= "all" & state_1961 == "Laccadive, Minicoy and Amindivi Islands"
+{txt}(10 observations deleted)
+
+{com}.         drop island
+{txt}
+{com}. 
+.         * for A&N, Tripura, Dadra & Nagar Haveli, Lakshadweep we need to create a new "district" [same as the state]
+.         expand 2 if inlist(state_1961,"Andaman & Nicobar Islands", "Tripura", "Dadra and Nagar Haveli", "Laccadive, Minicoy and Amindivi Islands"), gen(dist_obs)
+{txt}(46 observations created)
+
+{com}.         replace district_1961 = district_1961 + " District" if dist_obs
+{txt}variable {bf}{res}district_1961{sf}{txt} was {bf}{res}str39{sf}{txt} now {bf}{res}str48{sf}
+{txt}(46 real changes made)
+
+{com}.         replace dcode = dcode + 1 if dist_obs
+{txt}(46 real changes made)
+
+{com}.         drop dist_obs  
+{txt}
+{com}. 
+.         replace district_1961 = subinstr(district_1961,"Lakshadweep","Laccadive, Minicoy and Amindivi Islands",1)
+{txt}(0 real changes made)
+
+{com}.         expand 2 if strpos(state_1961,"Laccadive"), gen(lacca_obs)
+{txt}(2 observations created)
+
+{com}.         replace tribe = "all scheduled tribes" if lacca_obs
+{txt}(2 real changes made)
+
+{com}.         replace tribe_code = 196132500 if lacca_obs
+{txt}(2 real changes made)
+
+{com}.         drop lacca_obs
+{txt}
+{com}.         
+.         merge m:1 state_1961 district_1961 using `census_1961', assert(match using)
+{res}
+{txt}{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}             109
+{txt}{col 9}from master{col 30}{res}               0{txt}  (_merge==1)
+{col 9}from using{col 30}{res}             109{txt}  (_merge==2)
+
+{col 5}Matched{col 30}{res}           5,605{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. 
+.         assert inlist(state_1961,"Delhi","Goa, Daman and Diu", "Jammu & Kashmir", "North East Frontier Agency", ///
+>                                         "Pondicherry", "Punjab", "Sikkim", "Uttar Pradesh") | ///
+>                                         inlist(district_1961,"Akola","Bhandara","Buldhana","Nagpur","Wardha","Damoh","Sagar") ///
+>                                         if _merge == 2 
+{txt}
+{com}.         
+.         * these were areas where either STs were not delimited in 1961, or the full census was not conducted, or no STs were present in 1961    
+.         keep if _merge == 3
+{txt}(109 observations deleted)
+
+{com}.         assert dcode == dcode_1961
+{txt}
+{com}.         drop _merge dcode is_not_division sort_order
+{txt}
+{com}.                 
+.         order dcode_1961 division_code sub_division_code island_code state_1961 district_1961 area_1961 pop_1961 tribe_code tribe area
+{txt}
+{com}.                 
+.         label var area_1961 "Area (rural + urban)"
+{txt}
+{com}.         label var pop_1961 "Total Population (rural + urban)"
+{txt}
+{com}.         
+.         compress
+{txt}  (0 bytes saved)
+
+{com}. 
+.         save "../08_temp/census1961_st_edu_distcoded", replace
+{txt}{p 0 4 2}
+file {bf}
+../08_temp/census1961_st_edu_distcoded.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. project , creates("../08_temp/census1961_st_edu_distcoded.dta")
+{txt}project version2_tribe_language > do-file creates: {res}"08_temp/census1961_st_edu_distcoded.dta" filesig(1638760597:4223350){txt}
+
+{com}. 
+{txt}end of do-file
+      name:  {res}plog_772
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/1.02b_apply_district_codes_to_census61_edu_data.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res} 6 Sep 2021, 20:07:22
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

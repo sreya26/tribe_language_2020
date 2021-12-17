@@ -1,0 +1,343 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}plog_790
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/1.08a_import_ethnologue_tree.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 6 Sep 2021, 20:09:47
+{txt}
+{com}. ******************************************************************************************************************************************
+. * this file imports languages from the excel file with the Ethnologue tree, in preparation for merging with census 1961 mothertongue data
+. *! version 1.0 created by Hemanshu Kumar on 11 July 2020
+. * this is the first version to comply with Robert Picard's -project- command
+. * it is also the first version to update the Ethnologue tree to edition 23 
+. * Eberhard, David M., Gary F. Simons, and Charles D. Fennig (eds.) 2020. Ethnologue: Languages of the World. ed. 23. Dallas, Texas: SIL International.
+. ******************************************************************************************************************************************
+. local ethnologue_file "../01_data/ethnologue_data/20201023 Ethnologue Language Tree.xlsx"
+{txt}
+{com}. 
+. project , original("`ethnologue_file'")
+{txt}project version2_tribe_language > do-file uses original: {res}"01_data/ethnologue_data/20201023 Ethnologue Language Tree.xlsx" filesig(1605377605:69158){txt}
+
+{com}. 
+. import excel using "`ethnologue_file'", firstrow clear case(lower) sheet("Dravidian")
+{res}{text}(8 vars, 86 obs)
+
+{com}. tempfile Dravidian
+{txt}
+{com}. save `Dravidian'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_13929.000006{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+. import excel using "`ethnologue_file'", firstrow clear case(lower) sheet("Indo-European")
+{res}{text}(12 vars, 336 obs)
+
+{com}. drop if level1 == ""
+{txt}(104 observations deleted)
+
+{com}. tempfile IndoEuropean
+{txt}
+{com}. save `IndoEuropean'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_13929.000007{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+. import excel using "`ethnologue_file'", firstrow clear case(lower) sheet("Kra-Dai")
+{res}{text}(6 vars, 32 obs)
+
+{com}. drop if level1 == ""
+{txt}(0 observations deleted)
+
+{com}. tempfile KraDai
+{txt}
+{com}. save `KraDai'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_13929.000008{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+. import excel using "`ethnologue_file'", firstrow clear case(lower) sheet("Sino-Tibetan")
+{res}{text}(10 vars, 442 obs)
+
+{com}. drop if level1 == ""
+{txt}(0 observations deleted)
+
+{com}. tempfile SinoTibetan
+{txt}
+{com}. save `SinoTibetan'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_13929.000009{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+. import excel using "`ethnologue_file'", firstrow clear case(lower) sheet("Austro-Asiatic")
+{res}{text}(9 vars, 33 obs)
+
+{com}. drop if level1 == ""
+{txt}(0 observations deleted)
+
+{com}. tempfile AustroAsiatic
+{txt}
+{com}. save `AustroAsiatic'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_13929.00000a{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+. import excel using "`ethnologue_file'", firstrow clear case(lower) sheet("Andamanese")
+{res}{text}(5 vars, 14 obs)
+
+{com}. drop if level1 == ""
+{txt}(0 observations deleted)
+
+{com}. tempfile Andamanese
+{txt}
+{com}. save `Andamanese'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_13929.00000b{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+. import excel using "`ethnologue_file'", firstrow clear case(lower) sheet("Afro-Asiatic")
+{res}{text}(7 vars, 1 obs)
+
+{com}. drop if level1 == ""
+{txt}(0 observations deleted)
+
+{com}. tempfile AfroAsiatic
+{txt}
+{com}. save `AfroAsiatic'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_13929.00000c{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+. import excel using "`ethnologue_file'", firstrow clear case(lower) sheet("Japonic")
+{res}{text}(3 vars, 1 obs)
+
+{com}. drop if level1 == ""
+{txt}(0 observations deleted)
+
+{com}. tempfile Japonic
+{txt}
+{com}. save `Japonic'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_13929.00000d{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+. import excel using "`ethnologue_file'", firstrow clear case(lower) sheet("Creole")
+{res}{text}(4 vars, 1 obs)
+
+{com}. drop if level1 == ""
+{txt}(0 observations deleted)
+
+{com}. tempfile Creole
+{txt}
+{com}. save `Creole'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_13929.00000e{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+. import excel using "`ethnologue_file'", firstrow clear case(lower) sheet("Isolate")
+{res}{text}(3 vars, 1 obs)
+
+{com}. drop if level1 == ""
+{txt}(0 observations deleted)
+
+{com}. tempfile Isolate
+{txt}
+{com}. save `Isolate'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_13929.00000f{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+. import excel using "`ethnologue_file'", firstrow clear case(lower) sheet("Unclassified")
+{res}{text}(3 vars, 1 obs)
+
+{com}. drop if level1 == ""
+{txt}(0 observations deleted)
+
+{com}. tempfile Unclassified
+{txt}
+{com}. save `Unclassified'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_13929.00000g{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+. 
+. use `Dravidian', clear
+{txt}
+{com}. append using `IndoEuropean'
+{txt}{p 0 7 2}
+(variable
+{bf:level1} was {bf:str9}, now {bf:str13} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:level6} was {bf:str16}, now {bf:str19} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:level7} was {bf:str14}, now {bf:str22} to accommodate using data's values)
+{p_end}
+
+{com}. append using `KraDai'
+{txt}
+{com}. append using `SinoTibetan'
+{txt}{p 0 7 2}
+(variable
+{bf:level3} was {bf:str17}, now {bf:str26} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:level5} was {bf:str18}, now {bf:str19} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:level6} was {bf:str19}, now {bf:str20} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:level8} was {bf:str20}, now {bf:str22} to accommodate using data's values)
+{p_end}
+
+{com}. append using `AustroAsiatic'
+{txt}{p 0 7 2}
+(variable
+{bf:level1} was {bf:str13}, now {bf:str14} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:level5} was {bf:str19}, now {bf:str20} to accommodate using data's values)
+{p_end}
+
+{com}. append using `Andamanese'
+{txt}{p 0 7 2}
+(variable
+{bf:level2} was {bf:str13}, now {bf:str16} to accommodate using data's values)
+{p_end}
+
+{com}. append using `AfroAsiatic'
+{txt}
+{com}. append using `Japonic'
+{txt}
+{com}. append using `Creole'
+{txt}
+{com}. append using `Isolate'
+{txt}{p 0 7 2}
+(variable
+{bf:level1} was {bf:str14}, now {bf:str16} to accommodate using data's values)
+{p_end}
+
+{com}. append using `Unclassified'
+{txt}
+{com}. 
+. forval i=1/10 {c -(}
+{txt}  2{com}.         replace level`i' = trim(itrim(level`i'))
+{txt}  3{com}.         encode level`i', gen(numeric_level`i') label(LEVELS)
+{txt}  4{com}. {c )-}
+{txt}(0 real changes made)
+(1 real change made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(25 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+{com}. 
+. tempvar language
+{txt}
+{com}. egen `language' = rowlast(numeric_level*)
+{txt}
+{com}. label values `language' LEVELS
+{txt}
+{com}. egen lang_depth = rownonmiss(numeric_level*)
+{txt}
+{com}. 
+. decode `language', gen(language)
+{txt}
+{com}. 
+. gen level0 = "All Languages"
+{txt}
+{com}. 
+. drop numeric_* `language'
+{txt}
+{com}. 
+. drop if language == "Marwari" & strpos(comments,"Pakistan")>0 // drops the Pakistani version of Marwari
+{txt}(1 observation deleted)
+
+{com}. drop if language == "Naga, Tangkhul" & strpos(comments,"Myanmar")>0 // drops the Burmese version of Tangkhul
+{txt}(1 observation deleted)
+
+{com}. drop comments
+{txt}
+{com}. 
+. label var iso "ISO 639-3 Language Code"
+{txt}
+{com}. ///noi distinct language
+> order language iso lang_depth level0
+{txt}
+{com}. 
+. save "../08_temp/ethnologue_tree", replace
+{txt}{p 0 4 2}
+file {bf}
+../08_temp/ethnologue_tree.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. project , creates("../08_temp/ethnologue_tree.dta")
+{txt}project version2_tribe_language > do-file creates: {res}"08_temp/ethnologue_tree.dta" filesig(3499172153:194755){txt}
+
+{com}. 
+. 
+{txt}end of do-file
+      name:  {res}plog_790
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/1.08a_import_ethnologue_tree.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res} 6 Sep 2021, 20:09:48
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

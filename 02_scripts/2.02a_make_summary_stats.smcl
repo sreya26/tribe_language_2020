@@ -1,0 +1,619 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}plog_874
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/2.02a_make_summary_stats.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}16 Nov 2021, 12:36:12
+{txt}
+{com}. project , uses("../03_processed/lang_workfile.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"03_processed/lang_workfile.dta" filesig(4101914903:5173431){txt}
+
+{com}. project , uses("../03_processed/census_1961_mothertongue_for_analysis_distance.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"03_processed/census_1961_mothertongue_for_analysis_distance.dta" filesig(2272825759:18580009){txt}
+
+{com}. 
+. ************************************************************************************************************************
+. * Summary statistics on tribes and mother tongues
+. ************************************************************************************************************************
+. 
+.         local tabstat_opts stat(count min max median mean sd) save
+{txt}
+{com}.         
+.         use "../03_processed/lang_workfile", clear
+{txt}
+{com}.         drop if is_state
+{txt}(450 observations deleted)
+
+{com}. 
+.         keep if castegroup_1961_2011_code == 500
+{txt}(2,255 observations deleted)
+
+{com}. 
+.         gen st_frac = total_p_2011 / overallpop_2011 
+{txt}
+{com}. 
+.         tabstat total_p_2011 st_frac, `tabstat_opts' // ST population fraction per region
+
+{txt}   Stats {...}
+{c |}{...}
+  total_..   st_frac
+{hline 9}{c +}{hline 20}
+{ralign 8:N} {...}
+{c |}{...}
+ {res}      210       210
+{txt}{ralign 8:Min} {...}
+{c |}{...}
+ {res}     4189  .0006815
+{txt}{ralign 8:Max} {...}
+{c |}{...}
+ {res}  3811070   .961321
+{txt}{ralign 8:p50} {...}
+{c |}{...}
+ {res}   247207  .0787202
+{txt}{ralign 8:Mean} {...}
+{c |}{...}
+ {res} 470092.3   .175781
+{txt}{ralign 8:SD} {...}
+{c |}{...}
+ {res} 618163.7  .2333412
+{txt}{hline 9}{c BT}{hline 20}
+
+{com}.         tabstatmat A
+
+{txt}A[6,2]
+      total_p_2011       st_frac
+   N  {res}         210           210
+{txt} min  {res}        4189     .00068152
+{txt} max  {res}     3811070       .961321
+{txt} p50  {res}      247207     .07872016
+{txt}mean  {res}   470092.31     .17578101
+{txt}  sd  {res}   618163.73     .23334117
+{txt}
+{com}.         mat sumstats = A'
+{txt}
+{com}. 
+.                 
+.         use "../03_processed/lang_workfile", clear
+{txt}
+{com}.         drop if inlist(castegroup_1961_2011_code,500) // also 990?
+{txt}(229 observations deleted)
+
+{com}.         drop if is_state
+{txt}(431 observations deleted)
+
+{com}.         egen double india_p_2011 = total(total_p_2011), by(castegroup_1961_2011_code)
+{txt}
+{com}. 
+.         egen num_regions = count(region6113), by(castegroup_1961_2011_code)
+{txt}
+{com}.         egen num_tribes = count(castegroup_1961_2011_code) , by(region6113)
+{txt}
+{com}. 
+.         preserve
+{txt}
+{com}.                 duplicates drop castegroup_1961_2011_code, force
+
+{p 0 4}{txt}Duplicates in terms of {res} castegroup_1961_2011_code{p_end}
+
+{txt}(2,012 observations deleted)
+
+{com}.                 keep  castegroup_1961_2011_code india_p_2011 num_regions
+{txt}
+{com}.                 gsort -india_p_2011
+{txt}
+{com}.                 tabstat num_regions, `tabstat_opts' // number of regions per tribe
+
+{txt}{ralign 12:Variable} {...}
+{c |}         N       Min       Max       p50      Mean        SD
+{hline 13}{c +}{hline 60}
+{ralign 12:num_regions} {...}
+{c |}{...}
+ {res}      243         1       165         5  9.279835  15.65709
+{txt}{hline 13}{c BT}{hline 60}
+
+{com}.                 tabstatmat A
+
+{txt}A[6,1]
+      num_regions
+   N  {res}        243
+{txt} min  {res}          1
+{txt} max  {res}        165
+{txt} p50  {res}          5
+{txt}mean  {res}  9.2798354
+{txt}  sd  {res}  15.657091
+{txt}
+{com}.                 mat sumstats = sumstats \ A'
+{txt}
+{com}.         restore
+{txt}
+{com}. 
+.         duplicates drop region6113, force
+
+{p 0 4}{txt}Duplicates in terms of {res} region6113{p_end}
+
+{txt}(2,045 observations deleted)
+
+{com}.         tabstat num_tribes, `tabstat_opts' // number of tribes per region
+
+{txt}{ralign 12:Variable} {...}
+{c |}         N       Min       Max       p50      Mean        SD
+{hline 13}{c +}{hline 60}
+{ralign 12:num_tribes} {...}
+{c |}{...}
+ {res}      210         1        47       8.5   10.7381  7.934117
+{txt}{hline 13}{c BT}{hline 60}
+
+{com}.         tabstatmat A
+
+{txt}A[6,1]
+      num_tribes
+   N  {res}       210
+{txt} min  {res}         1
+{txt} max  {res}        47
+{txt} p50  {res}       8.5
+{txt}mean  {res} 10.738095
+{txt}  sd  {res} 7.9341172
+{txt}
+{com}.         mat sumstats = sumstats \ A'
+{txt}
+{com}. 
+.         use "../03_processed/census_1961_mothertongue_for_analysis_distance", clear
+{txt}
+{com}.         drop if is_state
+{txt}(4,411 observations deleted)
+
+{com}.         drop if inlist(castegroup_1961_2011_code,500) // also 990?
+{txt}(2,592 observations deleted)
+
+{com}.         drop if mothertongue == "all mother tongues"
+{txt}(2,337 observations deleted)
+
+{com}. 
+.         encode mothertongue, gen(mothertongue_num)
+{txt}
+{com}. 
+.         preserve
+{txt}
+{com}.                 duplicates drop region6113 mothertongue_num, force
+
+{p 0 4}{txt}Duplicates in terms of {res} region6113 mothertongue_num{p_end}
+
+{txt}(4,856 observations deleted)
+
+{com}.                 egen languages_by_region = count(mothertongue_num) , by(region6113)
+{txt}
+{com}.                 duplicates drop region6113, force
+
+{p 0 4}{txt}Duplicates in terms of {res} region6113{p_end}
+
+{txt}(2,172 observations deleted)
+
+{com}. 
+.                 tabstat languages_by_region, `tabstat_opts' // number of languages per region
+
+{txt}{ralign 12:Variable} {...}
+{c |}         N       Min       Max       p50      Mean        SD
+{hline 13}{c +}{hline 60}
+{ralign 12:languages_~n} {...}
+{c |}{...}
+ {res}      210         1        61         9  11.34286  9.385756
+{txt}{hline 13}{c BT}{hline 60}
+
+{com}.                 tabstatmat A
+
+{txt}A[6,1]
+      languages_by_region
+   N  {res}                210
+{txt} min  {res}                  1
+{txt} max  {res}                 61
+{txt} p50  {res}                  9
+{txt}mean  {res}          11.342857
+{txt}  sd  {res}          9.3857558
+{txt}
+{com}.                 mat sumstats = sumstats \ A'
+{txt}
+{com}.         restore
+{txt}
+{com}. 
+.         duplicates drop castegroup_1961_2011_code mothertongue, force
+
+{p 0 4}{txt}Duplicates in terms of {res} castegroup_1961_2011_code mothertongue{p_end}
+
+{txt}(4,775 observations deleted)
+
+{com}.         egen languages_by_tribe = count(mothertongue_num) , by(castegroup_1961_2011_code)
+{txt}
+{com}.         duplicates drop castegroup_1961_2011_code, force
+
+{p 0 4}{txt}Duplicates in terms of {res} castegroup_1961_2011_code{p_end}
+
+{txt}(2,215 observations deleted)
+
+{com}. 
+.         tabstat languages_by_tribe, `tabstat_opts' // number of languages per tribe
+
+{txt}{ralign 12:Variable} {...}
+{c |}         N       Min       Max       p50      Mean        SD
+{hline 13}{c +}{hline 60}
+{ralign 12:languages_~e} {...}
+{c |}{...}
+ {res}      248         1       119         6  9.931452  14.49694
+{txt}{hline 13}{c BT}{hline 60}
+
+{com}.         tabstatmat A
+
+{txt}A[6,1]
+      languages_by_tribe
+   N  {res}               248
+{txt} min  {res}                 1
+{txt} max  {res}               119
+{txt} p50  {res}                 6
+{txt}mean  {res}         9.9314516
+{txt}  sd  {res}          14.49694
+{txt}
+{com}.         mat sumstats = sumstats \ A'
+{txt}
+{com}.         
+.         use "../03_processed/lang_workfile", clear
+{txt}
+{com}.         drop if inlist(castegroup_1961_2011_code,500) // also 990?
+{txt}(229 observations deleted)
+
+{com}.         drop if is_state
+{txt}(431 observations deleted)
+
+{com}. 
+.         tabstat literacy_rate_2011 primaryplus_rate_2011 middleplus_rate_2011 matricplus_rate_2011 graduate_rate_2011 literacy_rate_1961 /// 
+>                 wt_lang_dist_f8_modal wt_lang_dist_tj_modal wt_lang_dist_as_modal, `tabstat_opts'
+
+{txt}   Stats {...}
+{c |}{...}
+  l~e_2011  primar..  middle..  matric..  gradua..  l~e_1961  ~8_modal  ~j_modal
+{hline 9}{c +}{hline 80}
+{ralign 8:N} {...}
+{c |}{...}
+ {res}     2254      2254      2247      2246      2241      2255      2255      2255
+{txt}{ralign 8:Min} {...}
+{c |}{...}
+ {res}        0         0         0         0         0         0         0         0
+{txt}{ralign 8:Max} {...}
+{c |}{...}
+ {res}        1         1         1         1         1         1         1        15
+{txt}{ralign 8:p50} {...}
+{c |}{...}
+ {res} .6335758  .4500489       .28  .1676632  .0267998   .091246  .0979536  1.590909
+{txt}{ralign 8:Mean} {...}
+{c |}{...}
+ {res} .6391744  .4748665  .3287005  .2312136  .0702211   .182502  .2592842  3.847185
+{txt}{ralign 8:SD} {...}
+{c |}{...}
+ {res} .1921187  .2136709  .2210995  .2090233  .1124967  .2424693  .3236781  4.387924
+{txt}{hline 9}{c BT}{hline 80}
+
+   Stats {...}
+{c |}{...}
+  ~s_modal
+{hline 9}{c +}{hline 10}
+{ralign 8:N} {...}
+{c |}{...}
+ {res}     2255
+{txt}{ralign 8:Min} {...}
+{c |}{...}
+ {res}        0
+{txt}{ralign 8:Max} {...}
+{c |}{...}
+ {res}   104.16
+{txt}{ralign 8:p50} {...}
+{c |}{...}
+ {res} 2.170288
+{txt}{ralign 8:Mean} {...}
+{c |}{...}
+ {res} 25.43366
+{txt}{ralign 8:SD} {...}
+{c |}{...}
+ {res} 34.51979
+{txt}{hline 9}{c BT}{hline 10}
+
+{com}.         tabstatmat A
+
+{txt}A[6,9]
+         literacy_rate_2011  primaryplus_rate_2011   middleplus_rate_2011
+   N  {res}                 2254                   2254                   2247
+{txt} min  {res}                    0                      0                      0
+{txt} max  {res}                    1                      1                      1
+{txt} p50  {res}            .63357577              .45004892                    .28
+{txt}mean  {res}             .6391744              .47486649               .3287005
+{txt}  sd  {res}            .19211871              .21367094              .22109954
+
+      {txt} matricplus_rate_2011     graduate_rate_2011     literacy_rate_1961
+   N  {res}                 2246                   2241                   2255
+{txt} min  {res}                    0                      0                      0
+{txt} max  {res}                    1                      1                      1
+{txt} p50  {res}            .16766323              .02679979              .09124599
+{txt}mean  {res}            .23121362              .07022108                .182502
+{txt}  sd  {res}            .20902335              .11249674              .24246931
+
+      {txt}wt_lang_dist_f8_modal  wt_lang_dist_tj_modal  wt_lang_dist_as_modal
+   N  {res}                 2255                   2255                   2255
+{txt} min  {res}                    0                      0                      0
+{txt} max  {res}                    1                     15                 104.16
+{txt} p50  {res}            .09795358              1.5909091              2.1702876
+{txt}mean  {res}            .25928415               3.847185              25.433662
+{txt}  sd  {res}            .32367806              4.3879239              34.519795
+{txt}
+{com}.         mat sumstats = sumstats \ A'
+{txt}
+{com}.         
+.         use "../03_processed/lang_workfile", clear
+{txt}
+{com}.         drop if inlist(castegroup_1961_2011_code,500)
+{txt}(229 observations deleted)
+
+{com}.         drop if is_state
+{txt}(431 observations deleted)
+
+{com}.         tabstat christian_frac_tribe_1961 christian_frac_st_1961 christian_frac_all_1961, `tabstat_opts' // Christian popn percentages
+
+{txt}   Stats {...}
+{c |}{...}
+  c~e_1961  c~t_1961  c~l_1961
+{hline 9}{c +}{hline 30}
+{ralign 8:N} {...}
+{c |}{...}
+ {res}     2255      2255      2255
+{txt}{ralign 8:Min} {...}
+{c |}{...}
+ {res}        0         0         0
+{txt}{ralign 8:Max} {...}
+{c |}{...}
+ {res}        1  .8805926    .86637
+{txt}{ralign 8:p50} {...}
+{c |}{...}
+ {res}        0  .0009596  .0063269
+{txt}{ralign 8:Mean} {...}
+{c |}{...}
+ {res} .0465936  .0479485  .0447335
+{txt}{ralign 8:SD} {...}
+{c |}{...}
+ {res} .1732386  .1370494  .1152208
+{txt}{hline 9}{c BT}{hline 30}
+
+{com}.         tabstatmat A
+
+{txt}A[6,3]
+      christian_frac_tribe_1961     christian_frac_st_1961    christian_frac_all_1961
+   N  {res}                     2255                       2255                       2255
+{txt} min  {res}                        0                          0                          0
+{txt} max  {res}                        1                  .88059258                  .86637002
+{txt} p50  {res}                        0                  .00095964                  .00632688
+{txt}mean  {res}                .04659356                  .04794855                  .04473352
+{txt}  sd  {res}                .17323863                   .1370494                  .11522084
+{txt}
+{com}.         mat sumstats = sumstats \ A'
+{txt}
+{com}. 
+.         tempfile sumstats
+{txt}
+{com}.         xsvmat sumstats, rowname(variables) names(col) saving(`sumstats')
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_00324.00000a{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+.         use `sumstats', clear
+{txt}
+{com}.         rename *, lower
+{res}{txt}
+{com}.         
+.         format min max p50 %11.0fc
+{txt}
+{com}.         format %10.2fc mean sd
+{txt}
+{com}. 
+.         tempvar obnum f8_ob f8_ob_temp edu_ob edu_ob_temp
+{txt}
+{com}.         set obs `=_N+2'
+{txt}{p}
+Number of observations ({bf:_N}) was 18,
+now 20.
+{p_end}
+
+{com}.         replace variables = "weighted_lang" in l
+{txt}(1 real change made)
+
+{com}.         replace variables = "edu" in -2
+{txt}(1 real change made)
+
+{com}.         gen `obnum' = _n
+{txt}
+{com}.         gen `f8_ob_temp' = _n if variables == "wt_lang_dist_f8_modal"
+{txt}(19 missing values generated)
+
+{com}.         egen `f8_ob' = max(`f8_ob_temp')
+{txt}
+{com}.         gen `edu_ob_temp' = _n if variables == "literacy_rate_2011"
+{txt}(19 missing values generated)
+
+{com}.         egen `edu_ob' = max(`edu_ob_temp')
+{txt}
+{com}.         replace `obnum' = `f8_ob' - 0.5 in l
+{txt}(1 real change made)
+
+{com}.         replace `obnum' = `edu_ob' - 0.5 in -2
+{txt}(1 real change made)
+
+{com}.         sort `obnum'
+{txt}
+{com}.   
+.         gen varlabel = "ST population per district (2011)" if variables == "total_p_2011"
+{txt}(19 missing values generated)
+
+{com}.         replace varlabel = "ST fraction per district (2011)" if variables == "st_frac"
+{txt}(1 real change made)
+
+{com}.         replace varlabel = "No. of districts per tribe" if variables == "num_regions"
+{txt}(1 real change made)
+
+{com}.         replace varlabel = "No. of tribes per district" if variables == "num_tribes"
+{txt}(1 real change made)
+
+{com}.         replace varlabel = "No. of mother tongues per district" if variables == "languages_by_region"
+{txt}variable {bf}{res}varlabel{sf}{txt} was {bf}{res}str33{sf}{txt} now {bf}{res}str34{sf}
+{txt}(1 real change made)
+
+{com}.         replace varlabel = "No. of mother tongues per tribe" if variables == "languages_by_tribe"
+{txt}(1 real change made)
+
+{com}.         replace varlabel = "Educational attainment (population fractions):" if variables == "edu"
+{txt}variable {bf}{res}varlabel{sf}{txt} was {bf}{res}str34{sf}{txt} now {bf}{res}str46{sf}
+{txt}(1 real change made)
+
+{com}.         replace varlabel = "-- Literate, 2011" if variables == "literacy_rate_2011"
+{txt}(1 real change made)
+
+{com}.         replace varlabel = "-- Primary school, 2011" if variables == "primaryplus_rate_2011"
+{txt}(1 real change made)
+
+{com}.         replace varlabel = "-- Middle school, 2011" if variables == "middleplus_rate_2011"
+{txt}(1 real change made)
+
+{com}.         replace varlabel = "-- Secondary school, 2011" if variables == "matricplus_rate_2011"
+{txt}(1 real change made)
+
+{com}.         replace varlabel = "-- Graduation, 2011" if variables == "graduate_rate_2011"
+{txt}(1 real change made)
+
+{com}.         replace varlabel = "-- Literate, 1961" if variables == "literacy_rate_1961"
+{txt}(1 real change made)
+
+{com}.         replace varlabel = "Christian Frac of tribe group (1961)" if variables == "christian_frac_tribe_1961"
+{txt}(1 real change made)
+
+{com}.         replace varlabel = "Christian Frac of all STs (1961)" if variables == "christian_frac_st_1961"
+{txt}(1 real change made)
+
+{com}.         replace varlabel = "Christian Frac of overall popn (1961)" if variables == "christian_frac_all_1961"
+{txt}(1 real change made)
+
+{com}.         replace varlabel = "\multicolumn{c -(}5{c )-}{c -(}l{c )-}{c -(}Language distance from modal medium of instruction in district:{c )-}" if variables == "weighted_lang"
+{txt}variable {bf}{res}varlabel{sf}{txt} was {bf}{res}str46{sf}{txt} now {bf}{res}str83{sf}
+{txt}(1 real change made)
+
+{com}.         replace varlabel = "-- using \$d^{c -(}CB{c )-}\$" if variables == "wt_lang_dist_f8_modal"
+{txt}(1 real change made)
+
+{com}.         replace varlabel = "-- using \$d^{c -(}NT{c )-}\$"  if variables == "wt_lang_dist_tj_modal"
+{txt}(1 real change made)
+
+{com}.         replace varlabel = "-- using \$d^{c -(}LS{c )-}\$"  if variables == "wt_lang_dist_as_modal"
+{txt}(1 real change made)
+
+{com}. 
+.         format varlabel %-32s
+{txt}
+{com}.         order varlabel min max p50 mean sd
+{txt}
+{com}. 
+.         tostring min max p50 mean sd, gen(min_str max_str p50_str mean_str sd_str) usedisplayformat force
+{txt}min_str generated as {res:str5}
+min_str was forced to string; some loss of information
+max_str generated as {res:str9}
+max_str was forced to string; some loss of information
+p50_str generated as {res:str7}
+p50_str was forced to string; some loss of information
+mean_str generated as {res:str10}
+mean_str was forced to string; some loss of information
+sd_str generated as {res:str10}
+sd_str was forced to string; some loss of information
+
+{com}.         replace min_str = string(round(min,0.001)) if variables == "st_frac" | strpos(variables,"_rate_") | strpos(variables,"_frac_")
+{txt}(1 real change made)
+
+{com}.         replace max_str = string(round(max,0.001))  if variables == "st_frac" | strpos(variables,"_rate_")| strpos(variables,"_frac_")
+{txt}(3 real changes made)
+
+{com}.         replace max_str = string(round(max,0.1))  if strpos(variables, "wt_lang_dist_")
+{txt}(1 real change made)
+
+{com}.         replace p50_str = string(round(p50,0.001))  if variables == "st_frac" | strpos(variables,"_rate_") | strpos(variables,"_frac_")
+{txt}(9 real changes made)
+
+{com}.         replace p50_str = string(round(p50,0.1))  if strpos(variables, "wt_lang_dist_")
+{txt}(3 real changes made)
+
+{com}.         replace mean_str = string(round(mean),"%13.0gc")  if variables == "total_p_2011"
+{txt}(1 real change made)
+
+{com}.         replace mean_str = string(round(mean,0.001))  if variables == "st_frac" | strpos(variables,"_rate_") | strpos(variables,"_frac_")
+{txt}(10 real changes made)
+
+{com}.         replace sd_str = string(round(sd),"%13.0gc")  if variables == "total_p_2011"
+{txt}(1 real change made)
+
+{com}.         replace sd_str = string(round(sd,0.001))  if variables == "st_frac" | strpos(variables,"_rate_") | strpos(variables,"_frac_")
+{txt}(10 real changes made)
+
+{com}. 
+.         replace min_str = "\phantom{c -(}\" if variables == "weighted_lang"
+{txt}variable {bf}{res}min_str{sf}{txt} was {bf}{res}str5{sf}{txt} now {bf}{res}str10{sf}
+{txt}(1 real change made)
+
+{com}.         replace max_str = "\"  if variables == "weighted_lang"
+{txt}(1 real change made)
+
+{com}.         replace p50_str = "\"  if variables == "weighted_lang"
+{txt}(1 real change made)
+
+{com}.         replace mean_str = "\"  if variables == "weighted_lang"
+{txt}(1 real change made)
+
+{com}.         replace sd_str = "{c )-}"  if variables == "weighted_lang"
+{txt}(1 real change made)
+
+{com}. 
+.         replace min_str = "" if variables == "edu"
+{txt}(1 real change made)
+
+{com}.         replace max_str = ""  if variables == "edu"
+{txt}(1 real change made)
+
+{com}.         replace p50_str = ""  if variables == "edu"
+{txt}(1 real change made)
+
+{com}.         replace mean_str = ""  if variables == "edu"
+{txt}(1 real change made)
+
+{com}.         replace sd_str = ""  if variables == "edu"
+{txt}(1 real change made)
+
+{com}.         
+.         #delimit ;
+{txt}delimiter now ;
+{com}.         listtab varlabel min_str max_str p50_str mean_str sd_str 
+>                 using "../04_results/01_tables/9_tribelang_summary_stats_1.tex", replace
+>                 rstyle(tabular)
+>                 head(
+>                 `"\toprule"' 
+>                 `" & Min & Max & Median & Mean & Std Dev\\"'
+>                 `"\midrule"')
+>                 foot(`"\bottomrule"')
+>                 ;
+{res}{txt}
+{com}.         #delimit cr
+{txt}delimiter now cr
+{com}. 
+.         project , creates("../04_results/01_tables/9_tribelang_summary_stats_1.tex")
+{txt}project version2_tribe_language > do-file creates: {res}"04_results/01_tables/9_tribelang_summary_stats_1.tex" filesig(672688087:1114){txt}
+
+{com}. 
+{txt}end of do-file
+      name:  {res}plog_874
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/2.02a_make_summary_stats.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}16 Nov 2021, 12:36:13
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

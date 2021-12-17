@@ -1,0 +1,299 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}plog_784
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/1.05b_combine_census2011_st_edu_files.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 6 Sep 2021, 20:09:05
+{txt}
+{com}. *************************************************************************************************************************
+. * this file combines and retains the relevant parts of the census 2011 education files (i.e. education levels + age groups)
+. *
+. *! version 1.0 created by Hemanshu Kumar on 7 July 2020
+. *************************************************************************************************************************
+. 
+. project , uses("../08_temp/census2011_st_age_dist_data.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"08_temp/census2011_st_age_dist_data.dta" filesig(3864278557:255456027){txt}
+
+{com}. project , uses("../08_temp/census2011_st_edu_dist_data.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"08_temp/census2011_st_edu_dist_data.dta" filesig(3192023946:41195198){txt}
+
+{com}. project , uses("../08_temp/census2011_st_edu_state_data.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"08_temp/census2011_st_edu_state_data.dta" filesig(4158628457:68370597){txt}
+
+{com}. 
+. *************************************************************************************************************************
+. * 1. keep just the age information from the district-level age-educational enrolment data (Table ST-9 Appendix)
+. * and IMPUTE the age-groups we need
+. * the relevant age groups we need are:
+. * (i) 0-6 years [literacy] ; (ii) 0-8 years [primary] ; (iii) 0-11 years [middle] 
+. * (iv) 0-14 years [secondary]; (v) 0-17 years [intermediate] ; (vi) 0-19 years [graduate] 
+. *************************************************************************************************************************
+. 
+. use "../08_temp/census2011_st_age_dist_data", clear
+{txt}
+{com}. 
+. foreach x in p m f {c -(}
+{txt}  2{com}.         tempvar age0to5_`x' age6to14_`x' age15to19_`x'
+{txt}  3{com}.         gen `age0to5_`x'' = total_`x' if age_group == "0-5"
+{txt}  4{com}.         gen `age6to14_`x'' = total_`x' if age_group == "6-14"
+{txt}  5{com}.         gen `age15to19_`x'' = total_`x' if age_group == "15-19"
+{txt}  6{com}.         
+.         egen age0to5_`x' = max(`age0to5_`x''), by(state_code district_code caste_code tru)
+{txt}  7{com}.         egen age6to14_`x' = max(`age6to14_`x''), by(state_code district_code caste_code tru)
+{txt}  8{com}.         egen age15to19_`x' = max(`age15to19_`x''), by(state_code district_code caste_code tru)  
+{txt}  9{com}. 
+.         * imputations!!
+.         gen age0to6_`x' = age0to5_`x' + round(age6to14_`x'/9)
+{txt} 10{com}.         gen age0to8_`x' = age0to5_`x' + round(age6to14_`x'/3)
+{txt} 11{com}.         gen age0to11_`x' = age0to5_`x' + round(age6to14_`x'*2/3)
+{txt} 12{com}.         gen age0to14_`x' = age0to5_`x' + age6to14_`x'
+{txt} 13{com}.         gen age0to17_`x' = age0to14_`x' + round(age15to19_`x'*3/5)
+{txt} 14{com}.         gen age0to19_`x' = age0to14_`x' + age15to19_`x'
+{txt} 15{com}.         
+.         drop `age0to5_`x'' `age6to14_`x'' `age15to19_`x'' age0to5_`x' age6to14_`x' age15to19_`x'
+{txt} 16{com}. {c )-}
+{txt}(252,525 missing values generated)
+(255,087 missing values generated)
+(252,525 missing values generated)
+(17,934 missing values generated)
+(17,934 missing values generated)
+(17,934 missing values generated)
+(17,934 missing values generated)
+(17,934 missing values generated)
+(17,934 missing values generated)
+(17,934 missing values generated)
+(252,525 missing values generated)
+(255,087 missing values generated)
+(252,525 missing values generated)
+(17,934 missing values generated)
+(17,934 missing values generated)
+(17,934 missing values generated)
+(17,934 missing values generated)
+(17,934 missing values generated)
+(17,934 missing values generated)
+(17,934 missing values generated)
+(252,525 missing values generated)
+(255,087 missing values generated)
+(252,525 missing values generated)
+(17,934 missing values generated)
+(17,934 missing values generated)
+(17,934 missing values generated)
+(17,934 missing values generated)
+(17,934 missing values generated)
+(17,934 missing values generated)
+(17,934 missing values generated)
+
+{com}. 
+. drop if age_group != "All ages"
+{txt}(252,525 observations deleted)
+
+{com}. drop age_group
+{txt}
+{com}. drop total_? attending_p-other_f
+{txt}
+{com}. 
+. tempfile dist_age
+{txt}
+{com}. save `dist_age'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_13929.000006{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+. *************************************************************************************************************************
+. * 2. merge the district-level age information with the district-level educational attainment data (Table ST-8 Appendix)
+. *************************************************************************************************************************
+. 
+. use "../08_temp/census2011_st_edu_dist_data", clear
+{txt}
+{com}. drop if district_code == 0
+{txt}(2,604 observations deleted)
+
+{com}. 
+. merge 1:1 state_code district_code caste_code tru using `dist_age', keepusing(age*) assert(1 3) nogen
+{res}
+{txt}{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}               0
+{txt}{col 5}Matched{col 30}{res}          42,093{txt}  
+{col 5}{hline 41}
+
+{com}. 
+. tempfile dist_data
+{txt}
+{com}. save `dist_data'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_13929.000007{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+. 
+. *************************************************************************************************************************
+. * 3. retain the relevant part of the state-level educational attainment data (Table ST-8)
+. * again, the relevant age groups we need are:
+. * (i) 0-6 years [literacy] ; (ii) 0-8 years [primary] ; (iii) 0-11 years [middle] 
+. * (iv) 0-14 years [secondary]; (v) 0-17 years [intermediate] ; (vi) 0-19 years [graduate] 
+. *************************************************************************************************************************
+. 
+. use "../08_temp/census2011_st_edu_state_data", clear
+{txt}
+{com}. 
+. drop if !inlist(age_group,"Total","0-6","7","8","9","10","11","12","13") & !inlist(age_group,"14","15","16","17","18","19")
+{txt}(36,456 observations deleted)
+
+{com}. 
+. gen upper_age = age_group if !inlist(age_group,"Total","0-6")
+{txt}(5,208 missing values generated)
+
+{com}. replace upper_age = "6" if age_group == "0-6"
+{txt}(2,604 real changes made)
+
+{com}. 
+. destring upper_age, replace
+{txt}upper_age: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}(2604 missing values generated)
+{res}{txt}
+{com}. 
+. local upper_ages 6 8 11 14 17 19
+{txt}
+{com}. 
+. foreach x in p m f {c -(}
+{txt}  2{com}.         foreach y of local upper_ages {c -(}
+{txt}  3{com}.                 tempvar age0to`y'_`x'
+{txt}  4{com}.                 egen `age0to`y'_`x'' = sum(total_`x') if inrange(upper_age,6,`y'), by(state_code caste_code tru)
+{txt}  5{com}.                 egen age0to`y'_`x' = max(`age0to`y'_`x'') , by(state_code caste_code tru)
+{txt}  6{com}.                 drop `age0to`y'_`x''
+{txt}  7{com}.         {c )-}       
+{txt}  8{com}. {c )-}
+{txt}(36,456 missing values generated)
+(31,248 missing values generated)
+(23,436 missing values generated)
+(15,624 missing values generated)
+(7,812 missing values generated)
+(2,604 missing values generated)
+(36,456 missing values generated)
+(31,248 missing values generated)
+(23,436 missing values generated)
+(15,624 missing values generated)
+(7,812 missing values generated)
+(2,604 missing values generated)
+(36,456 missing values generated)
+(31,248 missing values generated)
+(23,436 missing values generated)
+(15,624 missing values generated)
+(7,812 missing values generated)
+(2,604 missing values generated)
+
+{com}. 
+. format %16.0fc age0*
+{txt}
+{com}. drop upper_age
+{txt}
+{com}. 
+. drop if age_group != "Total"
+{txt}(36,456 observations deleted)
+
+{com}. drop age_group
+{txt}
+{com}. 
+. gen district_code = 0
+{txt}
+{com}. gen district = ""
+{txt}(2,604 missing values generated)
+
+{com}. 
+. order district_code, after(state_code)
+{txt}
+{com}. order district , after(state)
+{txt}
+{com}. 
+. *************************************************************************************************************************
+. * 4. append state and district data  
+. *************************************************************************************************************************
+. 
+. append using `dist_data'
+{txt}{p 0 7 2}
+(variable
+{bf:district} was {bf:str1}, now {bf:str28} to accommodate using data's values)
+{p_end}
+
+{com}. 
+. label define TRU 1 "Total" 2 "Rural" 3 "Urban"
+{txt}
+{com}. tempvar tru
+{txt}
+{com}. encode tru , gen(`tru') label(TRU)
+{txt}
+{com}. 
+. sort state_code district_code caste_code `tru'
+{txt}
+{com}. 
+. rename caste_name caste
+{res}{txt}
+{com}. 
+. compress
+  {txt}variable {bf}{res}district_code{sf}{txt} was {bf}{res}float{sf}{txt} now {bf}{res}int{sf}
+  {txt}variable {bf}{res}__00000R{sf}{txt} was {bf}{res}long{sf}{txt} now {bf}{res}byte{sf}
+{txt}  (223,485 bytes saved)
+
+{com}. 
+. save "../08_temp/census2011_st_edu_data", replace
+{txt}{p 0 4 2}
+file {bf}
+../08_temp/census2011_st_edu_data.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. 
+. *************************************************************************************************************************
+. * 5. create a small dataset of state-level populations of all tribes  
+. *************************************************************************************************************************
+. 
+. use "../08_temp/census2011_st_edu_data", clear
+{txt}
+{com}. 
+. keep if district_code == 0
+{txt}(42,093 observations deleted)
+
+{com}. drop if caste_code == 500
+{txt}(90 observations deleted)
+
+{com}. keep if tru == "Total"
+{txt}(1,676 observations deleted)
+
+{com}. 
+. keep state_code state caste_code caste total_p
+{txt}
+{com}. 
+. save "../08_temp/st_2011_state_pops", replace
+{txt}{p 0 4 2}
+file {bf}
+../08_temp/st_2011_state_pops.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. 
+. 
+. project , creates("../08_temp/census2011_st_edu_data.dta")
+{txt}project version2_tribe_language > do-file creates: {res}"08_temp/census2011_st_edu_data.dta" filesig(1403772620:44470432){txt}
+
+{com}. project , creates("../08_temp/st_2011_state_pops.dta")
+{txt}project version2_tribe_language > do-file creates: {res}"08_temp/st_2011_state_pops.dta" filesig(2995629499:636789){txt}
+
+{com}. 
+{txt}end of do-file
+      name:  {res}plog_784
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/1.05b_combine_census2011_st_edu_files.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res} 6 Sep 2021, 20:09:16
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

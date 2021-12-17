@@ -160,25 +160,69 @@ local dist_types tj as ap l f f8 dow
 	gen gross_matricplus_rate_1961 = gross_matric_rate_1961
 	
 	
-	** Generating variable for % of all STs in the region that are christian 
-	egen christian_p = rowtotal(christian_m_1961 christian_f_1961)
+	** Generating variable for % of all STs in the region that belong to major religions
 	
-	gen christian_perc_tribe = christian_p/total_p_1961 * 100
+	local religions buddhist christian jain muslim sikh hindu
+	
+	foreach relg of local religions {
+		egen `relg'_p = rowtotal(`relg'_m_1961 `relg'_f_1961)
+	}
+	
+	egen others_p = rowtotal(chandobonga_*_1961 marangburu_*_1961 paharia_*_1961 santal_*_1961 saridharma_*_1961 tirkia_*_1961 ///
+	religion_not_stated_*_1961 sarna_*_1961 chang_naga_*_1961 konyak_*_1961 lumbasabo_*_1961 wancho_*_1961 yimchunger_*_1961 ///
+	kabirpanthi_*_1961 zoroastrian_*_1961 ho_*_1961 sansari_*_1961 other_persuasions_*_1961 boro_*_1961 garo_*_1961 hajong_*_1961 ///
+	kachari_*_1961 khasi_*_1961 miri_*_1961 mikir_*_1961 mizo_*_1961 naga_*_1961 animist_*_1961 indefinite_belief_*_1961)
+
+	
+	gen christian_frac_tribe_1961 = christian_p/total_p_1961
 	
 	gen weight = 0 if castegroup_1961_2011_code == 500
 	replace weight = 1 if castegroup_1961_2011_code != 500
-
+	
 	egen region_total_pop = total(total_p_1961*weight), by (region6113)
-	egen region_total_christ = total(christian_p*weight), by (region6113)
-	gen christian_perc_region = region_total_christ/region_total_pop * 100
+	
+	local relgfrac buddhist christian jain muslim sikh hindu others 
+
+	foreach rel of local relgfrac {
+		egen region_total_`rel' = total(`rel'_p*weight), by(region6113)
+	}
 	
 	
-	drop christian_p region_total_pop region_total_christ
 	
-	label var christian_perc_tribe "(%) of tribe group in region that is Christian"
-	label var christian_perc_region "(%) of all tribe group in region that are Christian"
+	foreach rel of local relgfrac {
+		gen `rel'_frac_st_1961 = region_total_`rel'/region_total_pop
+	}
+	
+	egen total = rowtotal(*_frac_st_1961)
+	assert inrange(total,.9999999,1) //small check to see whether all religious groups have been accounted for 
+	drop total
 	
 	
+	local religion_agg christians buddhists jains muslims sikhs hindus 
+	
+	foreach relig of local religion_agg {
+		egen `relig'_agg_p = rowtotal(agg_`relig'_m_1961 agg_`relig'_f_1961)
+	}
+	
+
+	egen others_agg_p = rowtotal(agg_other_persuasions_*_1961 agg_religion_not_stated_*_1961 agg_other_religions_*_1961)
+
+
+	gen christian_frac_all_1961 = christians_agg_p/agg_total_p_1961
+	gen buddhist_frac_all_1961 = buddhists_agg_p/agg_total_p_1961
+	gen jain_frac_all_1961 = jains_agg_p/agg_total_p_1961
+	gen muslim_frac_all_1961 = muslims_agg_p/agg_total_p_1961
+	gen sikh_frac_all_1961 = sikhs_agg_p/agg_total_p_1961
+	gen hindu_frac_all_1961 = hindus_agg_p/agg_total_p_1961
+	gen others_frac_all_1961 = others_agg_p/agg_total_p_1961
+
+	
+	egen total = rowtotal(*_frac_all_1961)
+	assert inrange(total,.9993418,1.000198)
+
+	
+	drop christian_p buddhist_p jain_p muslim_p sikh_p hindu_p others_p region_total_* *_agg_p
+		
 	
 	*********************************************************************************************************************
 	* to get the net rates, we need age data, which is not available for STs separately in 1961

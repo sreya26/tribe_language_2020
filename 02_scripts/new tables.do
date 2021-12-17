@@ -1,0 +1,83 @@
+use "../03_processed/lang_workfile", clear
+	collect clear
+	drop if inlist(castegroup_1961_2011_code,500) | is_state // also exclude General Castes (990)?
+	keep if inlist(castegroup_1961_2011_code,1028,1091,1147,1149,1161,1243,1259,1262,1278,1317)
+
+
+	label var literacy_rate_1961 "Literacy 1961"
+	label var christian_frac_st_1961 "Christian Fraction 1961"
+	label var hindu_frac_st_1961 "Hindu Fraction 1961"
+	label var literacy_rate_2011 "Literacy"
+	label var primaryplus_rate_2011 "Primary"
+	label var middleplus_rate_2011 "Middle"
+	label var matricplus_rate_2011 "Matric"
+	label var graduate_rate_2011 "Graduate"
+	
+	local dist_types f8 // tj as
+
+
+	local match_to dominant // dominant modal enrol_st schools_all enrol_all
+
+	local areas all /*protected unprotected*/ // scheduled tribal 
+	
+	foreach area of local areas {
+		if "`area'" == "all" local ifcond
+			else if "`area'" == "scheduled" local ifcond "if scheduledarea6113~=0"
+				else if "`area'" == "tribal" local ifcond "if tribalarea6113~=0"
+					else if "`area'" == "protected" local ifcond "if scheduledarea6113~=0 | tribalarea6113~=0"
+						else if "`area'" == "unprotected" local ifcond "if scheduledarea6113 == 0 & tribalarea6113==0"
+				
+		foreach dtype of local dist_types {
+			foreach type of local match_to {
+				egen lang_dist_normalized = std(wt_lang_dist_`dtype'_`type') `ifcond'
+				label var lang_dist_normalized "Distance"
+				gen lang_dist_norm_sq = lang_dist_normalized^2
+				label var lang_dist_norm_sq "Distance\$^2\$"
+				local basic_x lang_dist_normalized lang_dist_norm_sq 
+				local dummies_x i.castegroup_1961_2011_code i.region6113
+				local religion_st_x hindu_frac_st_1961 christian_frac_st_1961
+				label var wt_lang_dist_`dtype'_`type' "Language Distance"
+
+				qui regress literacy_rate_2011 `basic_x' literacy_rate_1961 `religion_st_x' `dummies_x' `ifcond', robust
+				estimates store model1
+				qui regress primaryplus_rate_2011 `basic_x' literacy_rate_1961 `religion_st_x' `dummies_x' `ifcond', robust
+				estimates store model2
+				qui regress middleplus_rate_2011 `basic_x' literacy_rate_1961 `religion_st_x' `dummies_x' `ifcond', robust
+				estimates store model3
+				qui regress matricplus_rate_2011 `basic_x' literacy_rate_1961 `religion_st_x' `dummies_x' `ifcond', robust
+				estimates store model4
+				qui regress graduate_rate_2011 `basic_x' literacy_rate_1961 `religion_st_x' `dummies_x' `ifcond', robust
+				estimates store model5
+				
+				etable, estimates(model1 model2 model3 model4 model5) mstat(N, nformat(%18.0gc)) column(dvlabel) stars(.10 "*" .05 "**" .01 "***") showstars showstarsnote keep(lang_dist_normalized lang_dist_norm_sq literacy_rate_1961 hindu_frac_st_1961 christian_frac_st_1961 _cons) notes("Heteroskedasticity-robust standard errors in parentheses.") 
+				
+				collect layout (colname[lang_dist_normalized lang_dist_norm_sq literacy_rate_1961 hindu_frac_st_1961 christian_frac_st_1961 _cons]#result[_r_b _r_se] result[N]) (etable_dvlabel#stars[value label]) //fix table layout
+	            collect style cell (result[_r_b _r_se]), halign(center) valign(center) //formatting results
+                collect style cell result[N], halign(center) valign(center) border(top, width(1)) border(bottom, width(1)) //format no. of obs, add border 
+				*collect style cell stars[label], halign(left) margin( all, width(0) ) 
+				collect stars _r_p .01 `"***"' .05 `"** "' .1 `"*  "', result
+				collect style cell colname[lang_dist_normalized], warn margin( top, width(3) ) //add some space between first independent variable and column headers 
+				collect style cell,  margin( all, width(2) ) 
+				
+				
+				collect export "../04_results/01_tables/11_regression_`type'_`dtype'_`area'_newtables.tex" , tableonly replace
+				
+				
+				/*
+				#delimit ;
+				esttab LITERACY_Y61 PRIMARYPLUS_Y61 MIDDLEPLUS_Y61 MATRICPLUS_Y61 GRADUATE_Y61
+					using "../04_results/01_tables/11_regression_`type'_`dtype'_`area'_alltribes.tex", replace
+					booktabs
+					nobase nonumbers mtitles label b(3) se star(* 0.10 ** 0.05 *** 0.01) stats(N, fmt(%18.0gc) labels(`"Observations"') layout({@}))
+					drop(*castegroup_1961_2011_code* *region6113*)
+					nonotes
+					addnotes("Heteroskedasticity-robust standard errors in parentheses." "\sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)")
+				;
+			#delimit cr
+			
+	*/
+				drop lang_dist_normalized 
+				cap drop lang_dist_norm_sq
+				}
+			}
+	}

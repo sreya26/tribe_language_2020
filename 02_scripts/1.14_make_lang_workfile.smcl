@@ -1,0 +1,785 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}plog_814
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/1.14_make_lang_workfile.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}16 Nov 2021, 12:36:05
+{txt}
+{com}. *********************************************************************************************************************
+. * this do-file puts together the dataset for the tribelanguage paper
+. *********************************************************************************************************************
+. 
+. project , uses("../08_temp/census_2011_st_education_in_1961_regions.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"08_temp/census_2011_st_education_in_1961_regions.dta" filesig(4180270235:7533979){txt}
+
+{com}. project , uses("../03_processed/census_1961_mothertongue_for_analysis_distance.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"03_processed/census_1961_mothertongue_for_analysis_distance.dta" filesig(2272825759:18580009){txt}
+
+{com}. project , uses("../08_temp/census1961_st_edu_religion_with_dist_tribe_codes.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"08_temp/census1961_st_edu_religion_with_dist_tribe_codes.dta" filesig(2141767795:2824088){txt}
+
+{com}. project , uses("../08_temp/scheduled_and_tribal_regions.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"08_temp/scheduled_and_tribal_regions.dta" filesig(708465558:38081){txt}
+
+{com}. 
+. *********************************************************************************************************************
+. * various methods of calculating distance between two given languages: 
+. * (a) TJ: counting the number of nodes that we need to traverse to get from one language to the other (see the Tarun Jain (2017) Common Tongue paper)
+. * (b) F: The Fearon (2003) measure, using m = 15 and alpha = 0.5
+. * (c) F8: The Fearon (2003) measure, using m = 8 and alpha = 0.5  
+. * (d) AP: 1 - Proximity as defined in Adsera & Pytlikova (2015)
+. * (e) DOW: The Fearon (2003) measure, using m = 8 and alpha = 0.05; see Desmet, Ortuno-Ortin and Weber (2009)
+. * (f) AS: the LDND measure of Bakker et al (2009) using ASJP database 
+. * (g) L : Laitin (2000)'s r measure given in his footnote 7
+. 
+. local dist_types tj as ap l f f8 dow
+{txt}
+{com}. *********************************************************************************************************************
+. 
+. 
+. *********************************************************************************************************************
+. * 1. prepare the education outcomes data for census 2011 
+. *********************************************************************************************************************
+. 
+.         use "../08_temp/census_2011_st_education_in_1961_regions", clear
+{txt}
+{com}. 
+.         capture drop __*
+{txt}
+{com}.         
+.         distinct region6113 castegroup_1961_2011_code tru, joint
+{res}
+{col 1}{text}{hline 11}{c TT}{hline 11}{hline 11}
+{col 1}{text}          {col 12}{c |}     total{col 24}  distinct
+{res}{col 1}{text}{hline 11}{c +}{hline 11}{hline 11}
+{res}{col 1}{text} (jointly){col 12}{c |}{result}     21261{col 24}     21261
+{col 1}{text}{hline 11}{c BT}{hline 11}{hline 11}
+{res}{txt}
+{com}.         assert r(ndistinct) == r(N) // each observation is uniquely defined by region - castegroup - area
+{txt}
+{com}.                 
+.         keep if tru == "Total"
+{txt}(14,174 observations deleted)
+
+{com}.         drop tru
+{txt}
+{com}. 
+.         egen matricplus_p_2011 = rowtotal(matric_p_2011 intermediate_p_2011 nontechdiploma_p_2011 techdiploma_p_2011 graduate_p_2011)
+{txt}
+{com}.         egen middleplus_p_2011 = rowtotal(middle_p_2011 matricplus_p_2011)
+{txt}
+{com}.         egen primaryplus_p_2011 = rowtotal(primary_p_2011 middleplus_p_2011)
+{txt}
+{com}. 
+.         local edlevels          literacy primary primaryplus middle middleplus matric matricplus graduate
+{txt}
+{com}.         local excludeages       0to6    0to8            0to8    0to11   0to11           0to14   0to14           0to19
+{txt}
+{com}.         local numlevels: list sizeof edlevels
+{txt}
+{com}. 
+.         forval i=1/`numlevels' {c -(}
+{txt}  2{com}.                 local level: word `i' of `edlevels'
+{txt}  3{com}.                 local exage: word `i' of `excludeages'
+{txt}  4{com}.                 
+.                 if "`level'" == "literacy" local var literate
+{txt}  5{com}.                         else local var `level'
+{txt}  6{com}.                         
+.                 gen gross_`level'_rate_2011 = `var'_p_2011/total_p_2011
+{txt}  7{com}.                 gen `level'_rate_2011 = `var'_p_2011 / (total_p_2011 - age`exage'_p_2011)
+{txt}  8{com}.         {c )-}
+{txt}(23 missing values generated)
+(23 missing values generated)
+(23 missing values generated)
+(67 missing values generated)
+(67 missing values generated)
+(80 missing values generated)
+(80 missing values generated)
+(130 missing values generated)
+
+{com}.         
+.         *********************************************************************************************************************
+.         * note: the (non-gross) rates for literacy, primary and middle at the district level are partly imputations 
+.         * because the age data for the relevant individual years is not available by individual tribes at the district level
+.         * (see the file 1.02b_combine_census2011_st_edu_files.do for details)
+.         * so it is not surprising we get a few pathological cases as below:
+.         *********************************************************************************************************************
+.         noi sum literacy_rate_2011 primary_rate_2011 matric_rate_2011
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+literac~2011 {c |}{res}      7,064    .6699748    .2257664          0   1.142857
+{txt}primary_ra~1 {c |}{res}      7,064    .1673887    .1368021          0          2
+{txt}matric_rat~1 {c |}{res}      7,007    .1017544    .1253346          0          1
+{txt}
+{com}.         noi count if !missing(literacy_rate_2011) & literacy_rate_2011>1 // 29
+  {res}29
+{txt}
+{com}.         noi count if !missing(primary_rate_2011) & primary_rate_2011>1  // 7
+  {res}7
+{txt}
+{com}.         noi count if !missing(middle_rate_2011) & middle_rate_2011>1 // 1       
+  {res}1
+{txt}
+{com}.         * because these variables are imputed, and these nonsensical results are all for small tribes, we just arbitrarily fix these pathological cases
+.         foreach var in literacy_rate_2011 primary_rate_2011 primaryplus_rate_2011 middle_rate_2011 middleplus_rate_2011 {c -(}
+{txt}  2{com}.                 replace `var' = 1 if !missing(`var') & `var' > 1
+{txt}  3{com}.         {c )-}
+{txt}(29 real changes made)
+(7 real changes made)
+(35 real changes made)
+(1 real change made)
+(18 real changes made)
+
+{com}.         
+.         * let us drop states which we know do not exist in the 1961 ST language data
+.         drop if inlist(state_1961,"Goa, Daman and Diu","Jammu & Kashmir","North East Frontier Agency","Pondicherry","Sikkim","Uttar Pradesh")
+{txt}(582 observations deleted)
+
+{com}.                 
+.         dis as err "The outcomes dataset has `:dis %5.0fc _N ' observations." // 6,502
+{txt}{res}{err}The outcomes dataset has 6,505 observations.
+{txt}
+{com}.         
+.         tempfile outcomes
+{txt}
+{com}.         save `outcomes'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_00324.000008{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+. *********************************************************************************************************************
+. * 2. prepare the language distance information from census 1961 mother tongues combined with DISE 2013-14  
+. *********************************************************************************************************************
+.         
+.         use "../03_processed/census_1961_mothertongue_for_analysis_distance", clear
+{txt}
+{com}. 
+.         distinct region6113 castegroup_1961_2011_code mothertongue, joint
+{res}
+{col 1}{text}{hline 11}{c TT}{hline 11}{hline 11}
+{col 1}{text}          {col 12}{c |}     total{col 24}  distinct
+{res}{col 1}{text}{hline 11}{c +}{hline 11}{hline 11}
+{res}{col 1}{text} (jointly){col 12}{c |}{result}     16578{col 24}     16578
+{col 1}{text}{hline 11}{c BT}{hline 11}{hline 11}
+{res}{txt}
+{com}.         assert r(ndistinct) == r(N) // each observation is uniquely defined by region - castegroup - mothertongue
+{txt}
+{com}.         
+.         drop if mothertongue == "all mother tongues"    
+{txt}(3,012 observations deleted)
+
+{com}.         sort region6113 castegroup_1961_2011_code mothertongue
+{txt}
+{com}. 
+.         egen total_speakers = rowtotal(total_speakers*)
+{txt}
+{com}.         egen subsidiary_speakers = rowtotal(subsidiary_speakers_total_?)
+{txt}
+{com}.         egen subsi_speakers_of_dominant_lang = rowtotal(subsi_speakers_of_dom_lang_?)
+{txt}
+{com}.         
+.         foreach dtype of local dist_types {c -(}
+{txt}  2{com}.                 foreach type in dominant modal schools_all enrol_all enrol_st {c -(}
+{txt}  3{com}.                         gen weight_`dtype'_`type' = 1 if ~missing(lang_distance_`dtype'_`type')
+{txt}  4{com}.                         replace weight_`dtype'_`type' = . if missing(lang_distance_`dtype'_`type')
+{txt}  5{com}. 
+.                         gen total_speakers_temp = total_speakers * weight_`dtype'_`type'
+{txt}  6{com}.                         egen all_languages_temp = total(total_speakers_temp), by(state_1961 region6113 castegroup_1961_2011_code) missing
+{txt}  7{com}.                         
+.                         capture drop all_languages_`type'
+{txt}  8{com}.                         egen all_languages_`type' = max(all_languages_temp), by(state_1961 region6113 castegroup_1961_2011_code)
+{txt}  9{com}.                         drop total_speakers_temp all_languages_temp
+{txt} 10{com}. 
+.                         gen lang_frac_in_trb_`dtype'_`type' = (total_speakers / all_languages_`type' ) * weight_`dtype'_`type' // lang frac in tribe
+{txt} 11{com}.                         gen wt_lang_dist_`dtype'_`type' = lang_frac_in_trb_`dtype'_`type' * lang_distance_`dtype'_`type' //weighted
+{txt} 12{com}. 
+.                         {c )-}
+{txt} 13{com}.                 {c )-}
+{txt}(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(592 missing values generated)
+(0 real changes made)
+(592 missing values generated)
+(83 missing values generated)
+(83 missing values generated)
+(592 missing values generated)
+(592 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(4,132 missing values generated)
+(0 real changes made)
+(4,132 missing values generated)
+(123 missing values generated)
+(123 missing values generated)
+(4,132 missing values generated)
+(4,132 missing values generated)
+(4,178 missing values generated)
+(0 real changes made)
+(4,178 missing values generated)
+(186 missing values generated)
+(186 missing values generated)
+(4,178 missing values generated)
+(4,178 missing values generated)
+(4,067 missing values generated)
+(0 real changes made)
+(4,067 missing values generated)
+(123 missing values generated)
+(123 missing values generated)
+(4,067 missing values generated)
+(4,067 missing values generated)
+(4,067 missing values generated)
+(0 real changes made)
+(4,067 missing values generated)
+(123 missing values generated)
+(123 missing values generated)
+(4,067 missing values generated)
+(4,067 missing values generated)
+(4,067 missing values generated)
+(0 real changes made)
+(4,067 missing values generated)
+(123 missing values generated)
+(123 missing values generated)
+(4,067 missing values generated)
+(4,067 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(592 missing values generated)
+(0 real changes made)
+(592 missing values generated)
+(83 missing values generated)
+(83 missing values generated)
+(592 missing values generated)
+(592 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(592 missing values generated)
+(0 real changes made)
+(592 missing values generated)
+(83 missing values generated)
+(83 missing values generated)
+(592 missing values generated)
+(592 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(592 missing values generated)
+(0 real changes made)
+(592 missing values generated)
+(83 missing values generated)
+(83 missing values generated)
+(592 missing values generated)
+(592 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(592 missing values generated)
+(0 real changes made)
+(592 missing values generated)
+(83 missing values generated)
+(83 missing values generated)
+(592 missing values generated)
+(592 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(592 missing values generated)
+(0 real changes made)
+(592 missing values generated)
+(83 missing values generated)
+(83 missing values generated)
+(592 missing values generated)
+(592 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+(0 real changes made)
+(512 missing values generated)
+(3 missing values generated)
+(3 missing values generated)
+(512 missing values generated)
+(512 missing values generated)
+
+{com}.         
+.         * we collapse to the region - castegroup level (i.e. over the mothertongues spoken by each tribe in a region)
+.         
+.         collapse        (min) num_schools ///
+>                                 (sum) wt_lang_dist_* total_speakers subsidiary_speakers subsi_speakers_of_dominant_lang, ///
+>                                         by(state_1961 regionname6113 region6113 castegroup_1961_2011_code is_state)
+{res}{txt}
+{com}. 
+. 
+.         local lang_61_obs = _N
+{txt}
+{com}.         
+.         dis as err "The linguistic distance dataset has `:dis %5.0fc `lang_61_obs' ' observations." // 3,013
+{txt}{res}{err}The linguistic distance dataset has 3,012 observations.
+{txt}
+{com}.                                         
+.         tempfile distances
+{txt}
+{com}.         save `distances'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_00324.000009{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+. *********************************************************************************************************************
+. * 3. prep the census 1961 data on education, and merge it with the census 1961 linguistic data  
+. *********************************************************************************************************************
+.         
+.         use "../08_temp/census1961_st_edu_religion_with_dist_tribe_codes", clear
+{txt}
+{com}.         rename total_m totalm
+{res}{txt}
+{com}.         rename total_f totalf
+{res}{txt}
+{com}.         drop total_p
+{txt}
+{com}. 
+.         foreach stub in total illiterate literatenoed primary matric {c -(}
+{txt}  2{com}.                 rename `stub'? `stub'_?
+{txt}  3{com}.         {c )-}
+{res}{txt}
+{com}.                 
+.         egen total_p = rowtotal(total_m total_f)
+{txt}
+{com}.         egen illiterate_p = rowtotal(illiterate_m illiterate_f)
+{txt}
+{com}.         gen literate_p = total_p - illiterate_p
+{txt}
+{com}.         egen literatenoed_p = rowtotal(literatenoed_m literatenoed_f)
+{txt}
+{com}.         egen primary_p = rowtotal(primary_m primary_f)
+{txt}
+{com}.         egen matric_p = rowtotal(matric_m matric_f)
+{txt}
+{com}.         gen matricplus_p = matric_p
+{txt}
+{com}.         egen primaryplus_p = rowtotal(primary_p matricplus_p)
+{txt}
+{com}.         
+.         collapse (sum) *_m *_f *_p, by(region6113 regionname6113 castegroup_1961_2011_code)
+{res}{txt}
+{com}.         
+.         assert _N == `lang_61_obs' // sanity check: the 1961 education data should have exactly the same number of observations as the 1961 language data
+{txt}
+{com}.         
+.         rename (total_m - primaryplus_p) =_1961
+{res}{txt}
+{com}. 
+.         gen gross_literacy_rate_1961 = literate_p_1961/total_p_1961
+{txt}
+{com}.         gen gross_primary_rate_1961 = primary_p_1961/total_p_1961
+{txt}
+{com}.         gen gross_primaryplus_rate_1961 = primaryplus_p_1961/total_p_1961
+{txt}
+{com}.         gen gross_matric_rate_1961 = matric_p_1961/total_p_1961
+{txt}
+{com}.         gen gross_matricplus_rate_1961 = gross_matric_rate_1961
+{txt}
+{com}.         
+.         
+.         ** Generating variable for % of all STs in the region that belong to major religions
+.         
+.         local religions buddhist christian jain muslim sikh hindu
+{txt}
+{com}.         
+.         foreach relg of local religions {c -(}
+{txt}  2{com}.                 egen `relg'_p = rowtotal(`relg'_m_1961 `relg'_f_1961)
+{txt}  3{com}.         {c )-}
+{txt}
+{com}.         
+.         egen others_p = rowtotal(chandobonga_*_1961 marangburu_*_1961 paharia_*_1961 santal_*_1961 saridharma_*_1961 tirkia_*_1961 ///
+>         religion_not_stated_*_1961 sarna_*_1961 chang_naga_*_1961 konyak_*_1961 lumbasabo_*_1961 wancho_*_1961 yimchunger_*_1961 ///
+>         kabirpanthi_*_1961 zoroastrian_*_1961 ho_*_1961 sansari_*_1961 other_persuasions_*_1961 boro_*_1961 garo_*_1961 hajong_*_1961 ///
+>         kachari_*_1961 khasi_*_1961 miri_*_1961 mikir_*_1961 mizo_*_1961 naga_*_1961 animist_*_1961 indefinite_belief_*_1961)
+{txt}
+{com}. 
+.         
+.         gen christian_frac_tribe_1961 = christian_p/total_p_1961
+{txt}
+{com}.         
+.         gen weight = 0 if castegroup_1961_2011_code == 500
+{txt}(2,783 missing values generated)
+
+{com}.         replace weight = 1 if castegroup_1961_2011_code != 500
+{txt}(2,783 real changes made)
+
+{com}.         
+.         egen region_total_pop = total(total_p_1961*weight), by (region6113)
+{txt}
+{com}.         
+.         local relgfrac buddhist christian jain muslim sikh hindu others 
+{txt}
+{com}. 
+.         foreach rel of local relgfrac {c -(}
+{txt}  2{com}.                 egen region_total_`rel' = total(`rel'_p*weight), by(region6113)
+{txt}  3{com}.         {c )-}
+{txt}
+{com}.         
+.         
+.         
+.         foreach rel of local relgfrac {c -(}
+{txt}  2{com}.                 gen `rel'_frac_st_1961 = region_total_`rel'/region_total_pop
+{txt}  3{com}.         {c )-}
+{txt}
+{com}.         
+.         egen total = rowtotal(*_frac_st_1961)
+{txt}
+{com}.         assert inrange(total,.9999999,1) //small check to see whether all religious groups have been accounted for 
+{txt}
+{com}.         drop total
+{txt}
+{com}.         
+.         
+.         local religion_agg christians buddhists jains muslims sikhs hindus 
+{txt}
+{com}.         
+.         foreach relig of local religion_agg {c -(}
+{txt}  2{com}.                 egen `relig'_agg_p = rowtotal(agg_`relig'_m_1961 agg_`relig'_f_1961)
+{txt}  3{com}.         {c )-}
+{txt}
+{com}.         
+. 
+.         egen others_agg_p = rowtotal(agg_other_persuasions_*_1961 agg_religion_not_stated_*_1961 agg_other_religions_*_1961)
+{txt}
+{com}. 
+. 
+.         gen christian_frac_all_1961 = christians_agg_p/agg_total_p_1961
+{txt}
+{com}.         gen buddhist_frac_all_1961 = buddhists_agg_p/agg_total_p_1961
+{txt}
+{com}.         gen jain_frac_all_1961 = jains_agg_p/agg_total_p_1961
+{txt}
+{com}.         gen muslim_frac_all_1961 = muslims_agg_p/agg_total_p_1961
+{txt}
+{com}.         gen sikh_frac_all_1961 = sikhs_agg_p/agg_total_p_1961
+{txt}
+{com}.         gen hindu_frac_all_1961 = hindus_agg_p/agg_total_p_1961
+{txt}
+{com}.         gen others_frac_all_1961 = others_agg_p/agg_total_p_1961
+{txt}
+{com}. 
+.         
+.         egen total = rowtotal(*_frac_all_1961)
+{txt}
+{com}.         assert inrange(total,.9993418,1.000198)
+{txt}
+{com}. 
+.         
+.         drop christian_p buddhist_p jain_p muslim_p sikh_p hindu_p others_p region_total_* *_agg_p
+{txt}
+{com}.                 
+.         
+.         *********************************************************************************************************************
+.         * to get the net rates, we need age data, which is not available for STs separately in 1961
+.         * so we use the following scaling factors, from the full population
+.         *** (source: C-III Part A, "Age, Sex and Education in all areas" and C-IV "Single year age returns", Census 1961)
+.         *** (both tables from Part II-C(i) Social and Cultural Tables of the India volume)
+.         *********************************************************************************************************************
+. 
+.         local totalpop_1961 438936918 
+{txt}
+{com}.         local pop_frac_0to6_1961 = (66102638 + 7879090 + 7365057 + 7180513 + 6803988)/`totalpop_1961'   // 0to4 + 5m + 5f + 6m + 6f
+{txt}
+{com}.         local pop_frac_0to9_1961 = (66102638 + 64673959)/`totalpop_1961' //0to4 + 5to9
+{txt}
+{com}.         local pop_frac_0to8_1961 = (66102638 + round(4*64673959/5,0))/`totalpop_1961' // 0to4 + 80% of 5to9
+{txt}
+{com}.         local pop_frac_0to14_1961 = (66102638 + 64673959 + 49306185)/`totalpop_1961' //0to4 + 5to9 + 10to14
+{txt}
+{com}.         
+.         gen literacy_rate_1961 = gross_literacy_rate_1961 * (1-`pop_frac_0to6_1961')^-1
+{txt}
+{com}.         gen primaryplus_rate_1961 = gross_primaryplus_rate_1961 * (1-`pop_frac_0to8_1961')^-1
+{txt}
+{com}.         gen matricplus_rate_1961 = gross_matricplus_rate_1961 * (1-`pop_frac_0to14_1961')^-1
+{txt}
+{com}.         
+.         noi sum literacy_rate_1961
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+literac~1961 {c |}{res}      3,012     .185776    .2632351          0   1.277444
+{txt}
+{com}.         count if !missing(literacy_rate_1961) & literacy_rate_1961 > 1 // 92
+  {res}92
+{txt}
+{com}.         * again, as with the 2011 data, the 1961 literacy rate is sometimes above 1 for small tribes because of the imputation.
+.         * and again, we arbitrarily fix this
+.         replace literacy_rate_1961 = 1 if !missing(literacy_rate_1961) & literacy_rate_1961 > 1
+{txt}(92 real changes made)
+
+{com}.         
+.         noi sum primaryplus_rate_1961
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+prima~e_1961 {c |}{res}      3,012     .062179    .1698689          0      1.367
+{txt}
+{com}.         count if !missing(primaryplus_rate_1961) & primaryplus_rate_1961 > 1 //
+  {res}28
+{txt}
+{com}.         replace primaryplus_rate_1961 = 1 if !missing(primaryplus_rate_1961) & primaryplus_rate_1961 > 1
+{txt}(28 real changes made)
+
+{com}.         
+.         noi sum matricplus_rate_1961
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+matri~e_1961 {c |}{res}      3,012    .0129808    .0924452          0   1.695692
+{txt}
+{com}.         count if !missing(matricplus_rate_1961) & matricplus_rate_1961 > 1 //
+  {res}5
+{txt}
+{com}.         replace matricplus_rate_1961 = 1 if !missing(matricplus_rate_1961) & matricplus_rate_1961 > 1
+{txt}(5 real changes made)
+
+{com}.         
+.         
+.         merge 1:1 region6113 castegroup_1961_2011_code using `distances', assert(match) nogen
+{res}{txt}(label {bf:{txt}CASTE_GROUPS_1961_2011} already defined)
+
+{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}               0
+{txt}{col 5}Matched{col 30}{res}           3,012{txt}  
+{col 5}{hline 41}
+
+{com}. 
+.         tempfile data_1961
+{txt}
+{com}.         save `data_1961'
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_00324.00000a{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+. *********************************************************************************************************************
+. * 4. merge the outcomes data with the linguistic distance data  
+. *********************************************************************************************************************
+. 
+.         use `outcomes', clear
+{txt}
+{com}. 
+.         merge 1:1 region6113 castegroup_1961_2011_code using `data_1961'
+{res}{txt}{p 0 7 2}
+(variable
+{bf:region6113} was {bf:int}, now {bf:float} to accommodate using data's values)
+{p_end}
+(label {bf:{txt}CASTE_GROUPS_1961_2011} already defined)
+
+{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}           3,687
+{txt}{col 9}from master{col 30}{res}           3,590{txt}  (_merge==1)
+{col 9}from using{col 30}{res}              97{txt}  (_merge==2)
+
+{col 5}Matched{col 30}{res}           2,915{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}.         
+.         *********************************************************************************************************************
+.         * note: there was a massive increase in areas with STs between 1961 and 2011, because of 
+.         * (i) delimitation changes in 1976; 
+.         * (ii) states in which STs were delimited only later (e.g. Jammu & Kashmir, Uttar Pradesh, etc). 
+.         * In addition, there is lack of tribe-specific language data in Arunachal Pradesh in 1961. 
+.         * So we will have a massive number of observations in the 'master' dataset that do not merge. 
+.         * There are also some small tribes that that were present in 1961 but are not found in census 2011.
+.         * So there will be a small number of observations in the `using' dataset that do not merge.
+.         * All this is to be expected. We will trust the code to have done the merge correctly, and retain only the merged observations.
+.         *********************************************************************************************************************
+.         
+.         keep if _merge == 3  // 2,915 observations
+{txt}(3,687 observations deleted)
+
+{com}.         drop _merge
+{txt}
+{com}.         
+.         gen pop_2011_per_school = total_p_2011/num_schools
+{txt}
+{com}.          
+.         merge m:1 region6113 using "../08_temp/scheduled_and_tribal_regions", ///
+>                 keepusing(scheduledarea6113 tribalarea6113) assert(match using) keep(match) nogen
+{res}
+{txt}{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}               0
+{txt}{col 5}Matched{col 30}{res}           2,915{txt}  
+{col 5}{hline 41}
+
+{com}. 
+.         save "../03_processed/lang_workfile", replace
+{txt}{p 0 4 2}
+file {bf}
+../03_processed/lang_workfile.dta{rm}
+saved
+{p_end}
+
+{com}.         
+. project , creates("../03_processed/lang_workfile.dta")
+{txt}project version2_tribe_language > do-file creates: {res}"03_processed/lang_workfile.dta" filesig(4101914903:5173431){txt}
+
+{com}. 
+{txt}end of do-file
+      name:  {res}plog_814
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/1.14_make_lang_workfile.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}16 Nov 2021, 12:36:08
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

@@ -1,0 +1,42 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}plog_829
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/2.07a_export_regions.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 6 Sep 2021, 20:45:55
+{txt}
+{com}. project , uses("../03_processed/regions6113_with_dists_2011.dta")
+{txt}project version2_tribe_language > do-file uses: {res}"03_processed/regions6113_with_dists_2011.dta" filesig(2253008095:240447){txt}
+
+{com}. 
+. *********************************************************************************************************
+. * this bit of code creates a CSV file that links census 2011 districts to 1961-2013 consistent regions
+. * this is used to create a region-level shapefile using QGIS 
+. *********************************************************************************************************
+. 
+. use "../03_processed/regions6113_with_dists_2011", clear
+{txt}
+{com}. 
+. drop if mod(dcode_2011,1000) == 0 // drop state-level observations
+{txt}(35 observations deleted)
+
+{com}. drop dists_2011_in_region6113
+{txt}
+{com}. 
+. 
+. export delimited using "../03_processed/census_2011_dists_regions_6113.csv", replace
+{res}{txt}file {bf:../03_processed/census_2011_dists_regions_6113.csv} saved
+
+{com}. 
+. project , creates("../03_processed/census_2011_dists_regions_6113.csv")
+{txt}project version2_tribe_language > do-file creates: {res}"03_processed/census_2011_dists_regions_6113.csv" filesig(1949470989:20090){txt}
+
+{com}. 
+{txt}end of do-file
+      name:  {res}plog_829
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/2.07a_export_regions.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res} 6 Sep 2021, 20:45:55
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

@@ -1,0 +1,4859 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}plog_888
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/1.05c_append_combine_census2011_overall_sc_files.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}10 Nov 2021, 22:24:12
+{txt}
+{com}. *************************************************************************************************************************
+. * this file appends the original census 2011 education files for total Scheduled Tribes and Overall Population at the state and district level
+. * i.e. from Tables 08,SC-08
+. * these files contain both education level data and age data 
+. *! version 1.0 created by Sreya Majumder on 10 November 2021
+. *************************************************************************************************************************
+.         
+. local edu_dist_folder_all "../01_data/census_2011_st_edu_data/overall_08"
+{txt}
+{com}. local edu_dist_folder_sc "../01_data/census_2011_st_edu_data/sc_08"
+{txt}
+{com}.         
+. local edu_dist_files_all: dir "`edu_dist_folder_all'" files "DDW-????C-08.xlsx"
+{txt}
+{com}. local edu_dist_files_sc: dir "`edu_dist_folder_sc'" files "DDW-????C-08SC.xlsx"
+{txt}
+{com}.         
+. local file_types edu_dist_all edu_dist_sc
+{txt}
+{com}.         
+. foreach ft of local file_types {c -(}
+{txt}  2{com}.         foreach file of local `ft'_files {c -(}
+{txt}  3{com}.                 project , original("``ft'_folder'/`file'")              
+{txt}  4{com}.         {c )-}
+{txt}  5{com}. {c )-}
+{txt}
+{com}. 
+. *************************************************************************************************************************
+. * 1. append the district level education files for overall population
+. *************************************************************************************************************************
+. 
+.         clear
+{txt}
+{com}.         tempfile edu_dist_all
+{txt}
+{com}.         save `edu_dist_all' , emptyok replace
+{txt}(dataset contains 0 observations)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+.         foreach file of local edu_dist_files_all {c -(}
+{txt}  2{com}.                 import excel using "`edu_dist_folder_all'/`file'", clear cellrange(A8)
+{txt}  3{com}.                 destring B C E H-Z A?, replace
+{txt}  4{com}.                 keep if A == "C2308"
+{txt}  5{com}.                 drop A
+{txt}  6{com}.                 
+.                 tempfile table
+{txt}  7{com}.                 save `table', replace
+{txt}  8{com}.                 
+.                 use `edu_dist_all', clear
+{txt}  9{com}.                 dis as error "Appending data from file `file' ... "
+{txt} 10{com}.                 append using `table'
+{txt} 11{com}.                 
+.                 save`edu_dist_all', replace
+{txt} 12{com}.                 {c )-}
+{res}{text}(45 vars, 1,044 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000009{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000009{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-1300C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 2,349 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000a{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000a{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-2400C-08.xlsx ... 
+{txt}{p 0 7 2}
+(variable
+{bf:D} was {bf:str21}, now {bf:str24} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:AH} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:AK} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:AL} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:AM} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:AQ} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:AR} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:AS} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 2,697 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000b{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000b{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-2900C-08.xlsx ... 
+{txt}{p 0 7 2}
+(variable
+{bf:D} was {bf:str24}, now {bf:str27} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:AI} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:AJ} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 348 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000c{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000c{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-3500C-08.xlsx ... 
+{txt}{p 0 7 2}
+(variable
+{bf:D} was {bf:str27}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 1,131 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000d{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000d{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-0200C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 870 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000e{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000e{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-0700C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 261 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000f{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000f{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-3000C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 2,697 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000g{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000g{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-2100C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 435 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000h{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000h{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-1600C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 174 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000i{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000i{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-2600C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 435 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000j{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000j{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-1100C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(46 vars, 3,132 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}AT already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000k{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000k{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-0000C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 1,305 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000l{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000l{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-3200C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 1,218 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000m{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000m{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-0500C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 1,740 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000n{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000n{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-1900C-08.xlsx ... 
+{txt}{p 0 7 2}
+(variable
+{bf:D} was {bf:str34}, now {bf:str37} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 2,958 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000o{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000o{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-0800C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 870 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000p{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000p{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-1400C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 4,437 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000q{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000q{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-2300C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 1,914 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000r{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000r{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-0600C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 174 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000s{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000s{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-3100C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 2,175 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000t{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000t{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-2000C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 696 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000u{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000u{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-1700C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 1,479 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000v{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000v{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-1200C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 261 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000w{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000w{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-2500C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 2,088 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000x{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00000x{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-2800C-08.xlsx ... 
+{txt}{p 0 7 2}
+(variable
+{bf:D} was {bf:str37}, now {bf:str38} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 435 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000010{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000010{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-3400C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 1,827 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000011{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000011{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-0300C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 2,871 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000012{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000012{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-3300C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 174 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000013{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000013{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-0400C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 2,436 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000014{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000014{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-1800C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 6,264 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000015{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000015{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-0900C-08.xlsx ... 
+{txt}{p 0 7 2}
+(variable
+{bf:D} was {bf:str38}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 783 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000016{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000016{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-1500C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 1,653 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000017{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000017{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-2200C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 3,132 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000018{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000018{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-2700C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 3,393 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000019{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000019{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-1000C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 2,001 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001a{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001a{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-0100C-08.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000008{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+.         rename B state_code
+{res}{txt}
+{com}.         rename C district_code
+{res}{txt}
+{com}.         rename D area_name
+{res}{txt}
+{com}.         rename E tru
+{res}{txt}
+{com}.         rename F age_group
+{res}{txt}
+{com}.         rename G total_p
+{res}{txt}
+{com}.         rename H total_m
+{res}{txt}
+{com}.         rename I total_f
+{res}{txt}
+{com}.         rename J illiterate_p
+{res}{txt}
+{com}.         rename K illiterate_m
+{res}{txt}
+{com}.         rename L illiterate_f
+{res}{txt}
+{com}.         rename M literate_p
+{res}{txt}
+{com}.         rename N literate_m
+{res}{txt}
+{com}.         rename O literate_f
+{res}{txt}
+{com}.         rename P litnoed_p
+{res}{txt}
+{com}.         rename Q litnoed_m
+{res}{txt}
+{com}.         rename R litnoed_f
+{res}{txt}
+{com}.         rename S belowprimary_p
+{res}{txt}
+{com}.         rename T belowprimary_m
+{res}{txt}
+{com}.         rename U belowprimary_f
+{res}{txt}
+{com}.         rename V primary_p
+{res}{txt}
+{com}.         rename W primary_m
+{res}{txt}
+{com}.         rename X primary_f
+{res}{txt}
+{com}.         rename Y middle_p
+{res}{txt}
+{com}.         rename Z middle_m
+{res}{txt}
+{com}.         rename AA middle_f
+{res}{txt}
+{com}.         rename AB matric_p
+{res}{txt}
+{com}.         rename AC matric_m
+{res}{txt}
+{com}.         rename AD matric_f
+{res}{txt}
+{com}.         rename AE intermediate_p
+{res}{txt}
+{com}.         rename AF intermediate_m
+{res}{txt}
+{com}.         rename AG intermediate_f
+{res}{txt}
+{com}.         rename AH nontechdiploma_p
+{res}{txt}
+{com}.         rename AI nontechdiploma_m
+{res}{txt}
+{com}.         rename AJ nontechdiploma_f
+{res}{txt}
+{com}.         rename AK techdiploma_p
+{res}{txt}
+{com}.         rename AL techdiploma_m
+{res}{txt}
+{com}.         rename AM techdiploma_f
+{res}{txt}
+{com}.         rename AN graduate_p
+{res}{txt}
+{com}.         rename AO graduate_m
+{res}{txt}
+{com}.         rename AP graduate_f
+{res}{txt}
+{com}.         rename AQ unclassified_p
+{res}{txt}
+{com}.         rename AR unclassified_m
+{res}{txt}
+{com}.         rename AS unclassified_f
+{res}{txt}
+{com}.          
+.         replace area_name = subinstr(area_name,"State - ","",1)
+{txt}(6,090 real changes made)
+
+{com}.         replace area_name = subinstr(area_name,"UNION TERRITORY - ","",1)
+{txt}(0 real changes made)
+
+{com}.         replace area_name = subinstr(area_name,"District - ","",1)
+{txt}(55,680 real changes made)
+
+{com}. 
+. 
+.         replace area_name = trim(area_name)
+{txt}(4,959 real changes made)
+
+{com}. 
+.         gen state = area_name if district_code == 0
+{txt}(55,680 missing values generated)
+
+{com}.         replace state = state[_n-1] if missing(state)
+{txt}(55,680 real changes made)
+
+{com}. 
+.         replace area_name = "" if district_code == 0
+{txt}(6,177 real changes made)
+
+{com}.         rename area_name district
+{res}{txt}
+{com}.         order state , before(district)
+{txt}
+{com}.         drop AT
+{txt}
+{com}.         duplicates drop //note: this folder also contains the 00 INDIA file hence we have duplicates of the state level obs
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(3,045 observations deleted)
+
+{com}. 
+.         
+. 
+. *************************************************************************************************************************
+. * 2. keep just the age information from the district-level age-educational enrolment data
+. * the relevant age groups we need are:
+. * (i) 0-14 years [secondary]
+. *************************************************************************************************************************
+. 
+.         drop if district_code == 0 
+{txt}(3,132 observations deleted)
+
+{com}.         
+.         drop if !inlist(age_group,"All ages","0-6","7","8","9","10","11","12","13") & !inlist(age_group,"14","15","16","17","18","19")
+{txt}(26,880 observations deleted)
+
+{com}. 
+.         gen upper_age = age_group if !inlist(age_group,"All ages","0-6")
+{txt}(3,840 missing values generated)
+
+{com}.         replace upper_age = "6" if age_group == "0-6"
+{txt}(1,920 real changes made)
+
+{com}. 
+.         destring upper_age, replace
+{txt}upper_age: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}(1920 missing values generated)
+{res}{txt}
+{com}. 
+.         local upper_ages 6 8 11 14 17 19
+{txt}
+{com}. 
+.         foreach x in p m f {c -(}
+{txt}  2{com}.                 foreach y of local upper_ages {c -(}
+{txt}  3{com}.                         tempvar age0to`y'_`x'
+{txt}  4{com}.                         egen `age0to`y'_`x'' = sum(total_`x') if inrange(upper_age,6,`y'), by(district_code tru)
+{txt}  5{com}.                         egen age0to`y'_`x' = max(`age0to`y'_`x'') , by(district_code tru)
+{txt}  6{com}.                         drop `age0to`y'_`x''
+{txt}  7{com}.                 {c )-}       
+{txt}  8{com}.         {c )-}
+{txt}(26,880 missing values generated)
+(23,040 missing values generated)
+(17,280 missing values generated)
+(11,520 missing values generated)
+(5,760 missing values generated)
+(1,920 missing values generated)
+(26,880 missing values generated)
+(23,040 missing values generated)
+(17,280 missing values generated)
+(11,520 missing values generated)
+(5,760 missing values generated)
+(1,920 missing values generated)
+(26,880 missing values generated)
+(23,040 missing values generated)
+(17,280 missing values generated)
+(11,520 missing values generated)
+(5,760 missing values generated)
+(1,920 missing values generated)
+
+{com}. 
+.         format %16.0fc total_p - unclassified_f age0*
+{txt}
+{com}.         drop upper_age
+{txt}
+{com}. 
+.         drop if age_group != "All ages"
+{txt}(26,880 observations deleted)
+
+{com}.         drop age_group
+{txt}
+{com}.         
+.         sort state_code district_code tru
+{txt}
+{com}.         
+.         label define TRU 1 "Total" 2 "Rural" 3 "Urban"
+{txt}
+{com}.         tempvar tru
+{txt}
+{com}.         encode tru , gen(`tru') label(TRU)
+{txt}
+{com}. 
+. 
+.         
+.         compress
+  {txt}variable {bf}{res}nontechdiploma_f{sf}{txt} was {bf}{res}long{sf}{txt} now {bf}{res}int{sf}
+  {txt}variable {bf}{res}unclassified_m{sf}{txt} was {bf}{res}long{sf}{txt} now {bf}{res}int{sf}
+  {txt}variable {bf}{res}unclassified_f{sf}{txt} was {bf}{res}long{sf}{txt} now {bf}{res}int{sf}
+  {txt}variable {bf}{res}__00000I{sf}{txt} was {bf}{res}long{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}{res}district{sf}{txt} was {bf}{res}str39{sf}{txt} now {bf}{res}str28{sf}
+{txt}  (38,400 bytes saved)
+
+{com}.         save "../08_temp/census2011_overall_edu_data", replace
+{txt}{p 0 4 2}
+file {bf}
+../08_temp/census2011_overall_edu_data.dta{rm}
+saved
+{p_end}
+
+{com}.         
+.         
+. *************************************************************************************************************************
+. * 3. append the district level education files for sc population
+. *************************************************************************************************************************
+. 
+.         clear
+{txt}
+{com}.         tempfile edu_dist_sc
+{txt}
+{com}.         save `edu_dist_sc' , emptyok replace
+{txt}(dataset contains 0 observations)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+.         foreach file of local edu_dist_files_sc {c -(}
+{txt}  2{com}.                 import excel using "`edu_dist_folder_sc'/`file'", clear cellrange(A8)
+{txt}  3{com}.                 destring B C E H-Z A?, replace
+{txt}  4{com}.                 keep if A == "C2508SC"
+{txt}  5{com}.                 drop A
+{txt}  6{com}.                 
+.                 tempfile table
+{txt}  7{com}.                 save `table', replace
+{txt}  8{com}.                 
+.                 use `edu_dist_sc', clear
+{txt}  9{com}.                 dis as error "Appending data from file `file' ... "
+{txt} 10{com}.                 append using `table'
+{txt} 11{com}.                 
+.                 save`edu_dist_sc', replace
+{txt} 12{com}.                 {c )-}
+{res}{text}(45 vars, 1,653 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001c{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001c{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-2200C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 261 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001d{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001d{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-2500C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 261 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001e{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001e{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-3000C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 2,001 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001f{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001f{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-0100C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 1,914 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001g{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001g{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-0600C-08SC.xlsx ... 
+{txt}{p 0 7 2}
+(variable
+{bf:Q} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:AP} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 870 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001h{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001h{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-1400C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 2,349 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001i{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001i{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-2400C-08SC.xlsx ... 
+{txt}{p 0 7 2}
+(variable
+{bf:R} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:AK} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 4,437 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001j{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001j{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-2300C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 783 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001k{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001k{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-1500C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 870 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001l{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001l{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-0700C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(46 vars, 2,784 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}AT already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001m{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001m{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-0000C-08SC.xlsx ... 
+{txt}{p 0 7 2}
+(variable
+{bf:AH} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:AI} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:AL} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:AM} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:AQ} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:AR} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:AS} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 2,436 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001n{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001n{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-1800C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 2,697 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001o{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001o{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-2900C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 1,740 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001p{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001p{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-1900C-08SC.xlsx ... 
+{txt}{p 0 7 2}
+(variable
+{bf:D} was {bf:str35}, now {bf:str37} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 2,088 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001q{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001q{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-2800C-08SC.xlsx ... 
+{txt}{p 0 7 2}
+(variable
+{bf:D} was {bf:str37}, now {bf:str38} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 6,264 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001r{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001r{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-0900C-08SC.xlsx ... 
+{txt}{p 0 7 2}
+(variable
+{bf:D} was {bf:str38}, now {bf:str39} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 2,958 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001s{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001s{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-0800C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 2,871 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001t{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001t{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-3300C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 435 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001u{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001u{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-3400C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 2,697 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001v{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001v{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-2100C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 174 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001w{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001w{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-2600C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 3,393 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001x{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001x{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-1000C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 696 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000020{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000020{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-1700C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 1,131 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000021{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000021{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-0200C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 1,218 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000022{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000022{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-0500C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 3,132 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000023{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000023{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-2700C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 2,175 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000024{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000024{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-2000C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 1,305 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000025{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000025{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-3200C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 174 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000026{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000026{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-0400C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 1,827 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000027{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000027{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-0300C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 435 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000028{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000028{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-1600C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+{res}{text}(45 vars, 435 obs)
+B: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}C: all characters numeric; {res}replaced {txt}as {res}int
+{txt}E: contains nonnumeric bytes; no {res}replace
+{txt}H already numeric; no {res}replace
+{txt}I already numeric; no {res}replace
+{txt}J already numeric; no {res}replace
+{txt}K already numeric; no {res}replace
+{txt}L already numeric; no {res}replace
+{txt}M already numeric; no {res}replace
+{txt}N already numeric; no {res}replace
+{txt}O already numeric; no {res}replace
+{txt}P already numeric; no {res}replace
+{txt}Q already numeric; no {res}replace
+{txt}R already numeric; no {res}replace
+{txt}S already numeric; no {res}replace
+{txt}T already numeric; no {res}replace
+{txt}U already numeric; no {res}replace
+{txt}V already numeric; no {res}replace
+{txt}W already numeric; no {res}replace
+{txt}X already numeric; no {res}replace
+{txt}Y already numeric; no {res}replace
+{txt}Z already numeric; no {res}replace
+{txt}AA already numeric; no {res}replace
+{txt}AB already numeric; no {res}replace
+{txt}AC already numeric; no {res}replace
+{txt}AD already numeric; no {res}replace
+{txt}AE already numeric; no {res}replace
+{txt}AF already numeric; no {res}replace
+{txt}AG already numeric; no {res}replace
+{txt}AH already numeric; no {res}replace
+{txt}AI already numeric; no {res}replace
+{txt}AJ already numeric; no {res}replace
+{txt}AK already numeric; no {res}replace
+{txt}AL already numeric; no {res}replace
+{txt}AM already numeric; no {res}replace
+{txt}AN already numeric; no {res}replace
+{txt}AO already numeric; no {res}replace
+{txt}AP already numeric; no {res}replace
+{txt}AQ already numeric; no {res}replace
+{txt}AR already numeric; no {res}replace
+{txt}AS already numeric; no {res}replace
+{txt}(0 observations deleted)
+{p 0 4 2}
+(file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000029{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.000029{rm}
+saved
+as .dta format
+{p_end}
+{err}Appending data from file DDW-1100C-08SC.xlsx ... 
+{txt}{p 0 4 2}
+file {bf}
+/var/folders/m0/4lyk4gcd0rs88ghc7sdnwc600000gn/T//S_01887.00001b{rm}
+saved
+as .dta format
+{p_end}
+
+{com}. 
+.         rename B state_code
+{res}{txt}
+{com}.         rename C district_code
+{res}{txt}
+{com}.         rename D area_name
+{res}{txt}
+{com}.         rename E tru
+{res}{txt}
+{com}.         rename F age_group
+{res}{txt}
+{com}.         rename G total_p
+{res}{txt}
+{com}.         rename H total_m
+{res}{txt}
+{com}.         rename I total_f
+{res}{txt}
+{com}.         rename J illiterate_p
+{res}{txt}
+{com}.         rename K illiterate_m
+{res}{txt}
+{com}.         rename L illiterate_f
+{res}{txt}
+{com}.         rename M literate_p
+{res}{txt}
+{com}.         rename N literate_m
+{res}{txt}
+{com}.         rename O literate_f
+{res}{txt}
+{com}.         rename P litnoed_p
+{res}{txt}
+{com}.         rename Q litnoed_m
+{res}{txt}
+{com}.         rename R litnoed_f
+{res}{txt}
+{com}.         rename S belowprimary_p
+{res}{txt}
+{com}.         rename T belowprimary_m
+{res}{txt}
+{com}.         rename U belowprimary_f
+{res}{txt}
+{com}.         rename V primary_p
+{res}{txt}
+{com}.         rename W primary_m
+{res}{txt}
+{com}.         rename X primary_f
+{res}{txt}
+{com}.         rename Y middle_p
+{res}{txt}
+{com}.         rename Z middle_m
+{res}{txt}
+{com}.         rename AA middle_f
+{res}{txt}
+{com}.         rename AB matric_p
+{res}{txt}
+{com}.         rename AC matric_m
+{res}{txt}
+{com}.         rename AD matric_f
+{res}{txt}
+{com}.         rename AE intermediate_p
+{res}{txt}
+{com}.         rename AF intermediate_m
+{res}{txt}
+{com}.         rename AG intermediate_f
+{res}{txt}
+{com}.         rename AH nontechdiploma_p
+{res}{txt}
+{com}.         rename AI nontechdiploma_m
+{res}{txt}
+{com}.         rename AJ nontechdiploma_f
+{res}{txt}
+{com}.         rename AK techdiploma_p
+{res}{txt}
+{com}.         rename AL techdiploma_m
+{res}{txt}
+{com}.         rename AM techdiploma_f
+{res}{txt}
+{com}.         rename AN graduate_p
+{res}{txt}
+{com}.         rename AO graduate_m
+{res}{txt}
+{com}.         rename AP graduate_f
+{res}{txt}
+{com}.         rename AQ unclassified_p
+{res}{txt}
+{com}.         rename AR unclassified_m
+{res}{txt}
+{com}.         rename AS unclassified_f
+{res}{txt}
+{com}.          
+.         replace area_name = subinstr(area_name,"State - ","",1)
+{txt}(5,394 real changes made)
+
+{com}.         replace area_name = subinstr(area_name,"UNION TERRITORY - ","",1)
+{txt}(0 real changes made)
+
+{com}.         replace area_name = subinstr(area_name,"District - ","",1)
+{txt}(52,983 real changes made)
+
+{com}. 
+. 
+.         replace area_name = trim(area_name)
+{txt}(4,872 real changes made)
+
+{com}. 
+.         gen state = area_name if district_code == 0
+{txt}(52,983 missing values generated)
+
+{com}.         replace state = state[_n-1] if missing(state)
+{txt}(52,983 real changes made)
+
+{com}. 
+.         replace area_name = "" if district_code == 0
+{txt}(5,481 real changes made)
+
+{com}.         rename area_name district
+{res}{txt}
+{com}.         order state , before(district)
+{txt}
+{com}.         drop AT
+{txt}
+{com}.         duplicates drop //note: this folder also contains the 00 INDIA file hence we have duplicates of the state level obs
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(2,697 observations deleted)
+
+{com}. 
+.         
+.         
+. *************************************************************************************************************************
+. * 4. keep just the age information from the district-level age-educational enrolment data
+. * the relevant age groups we need are:
+. * (i) 0-14 years [secondary]
+. *************************************************************************************************************************
+. 
+.         drop if district_code == 0 
+{txt}(2,784 observations deleted)
+
+{com}.         
+.         drop if !inlist(age_group,"All ages","0-6","7","8","9","10","11","12","13") & !inlist(age_group,"14","15","16","17","18","19")
+{txt}(25,578 observations deleted)
+
+{com}. 
+.         gen upper_age = age_group if !inlist(age_group,"All ages","0-6")
+{txt}(3,654 missing values generated)
+
+{com}.         replace upper_age = "6" if age_group == "0-6"
+{txt}(1,827 real changes made)
+
+{com}. 
+.         destring upper_age, replace
+{txt}upper_age: all characters numeric; {res}replaced {txt}as {res}byte
+{txt}(1827 missing values generated)
+{res}{txt}
+{com}. 
+.         local upper_ages 6 8 11 14 17 19
+{txt}
+{com}. 
+.         foreach x in p m f {c -(}
+{txt}  2{com}.                 foreach y of local upper_ages {c -(}
+{txt}  3{com}.                         tempvar age0to`y'_`x'
+{txt}  4{com}.                         egen `age0to`y'_`x'' = sum(total_`x') if inrange(upper_age,6,`y'), by(district_code tru)
+{txt}  5{com}.                         egen age0to`y'_`x' = max(`age0to`y'_`x'') , by(district_code tru)
+{txt}  6{com}.                         drop `age0to`y'_`x''
+{txt}  7{com}.                 {c )-}       
+{txt}  8{com}.         {c )-}
+{txt}(25,578 missing values generated)
+(21,924 missing values generated)
+(16,443 missing values generated)
+(10,962 missing values generated)
+(5,481 missing values generated)
+(1,827 missing values generated)
+(25,578 missing values generated)
+(21,924 missing values generated)
+(16,443 missing values generated)
+(10,962 missing values generated)
+(5,481 missing values generated)
+(1,827 missing values generated)
+(25,578 missing values generated)
+(21,924 missing values generated)
+(16,443 missing values generated)
+(10,962 missing values generated)
+(5,481 missing values generated)
+(1,827 missing values generated)
+
+{com}. 
+.         format %16.0fc total_p - unclassified_f age0*
+{txt}
+{com}.         drop upper_age
+{txt}
+{com}. 
+.         drop if age_group != "All ages"
+{txt}(25,578 observations deleted)
+
+{com}.         drop age_group
+{txt}
+{com}.         
+.         sort state_code district_code tru
+{txt}
+{com}.         
+.         label define TRU 1 "Total" 2 "Rural" 3 "Urban"
+{txt}
+{com}.         tempvar tru
+{txt}
+{com}.         encode tru , gen(`tru') label(TRU)
+{txt}
+{com}. 
+.         
+.         compress
+  {txt}variable {bf}{res}litnoed_f{sf}{txt} was {bf}{res}long{sf}{txt} now {bf}{res}int{sf}
+  {txt}variable {bf}{res}nontechdiploma_p{sf}{txt} was {bf}{res}long{sf}{txt} now {bf}{res}int{sf}
+  {txt}variable {bf}{res}nontechdiploma_m{sf}{txt} was {bf}{res}long{sf}{txt} now {bf}{res}int{sf}
+  {txt}variable {bf}{res}techdiploma_p{sf}{txt} was {bf}{res}long{sf}{txt} now {bf}{res}int{sf}
+  {txt}variable {bf}{res}techdiploma_m{sf}{txt} was {bf}{res}long{sf}{txt} now {bf}{res}int{sf}
+  {txt}variable {bf}{res}techdiploma_f{sf}{txt} was {bf}{res}long{sf}{txt} now {bf}{res}int{sf}
+  {txt}variable {bf}{res}unclassified_p{sf}{txt} was {bf}{res}long{sf}{txt} now {bf}{res}int{sf}
+  {txt}variable {bf}{res}unclassified_m{sf}{txt} was {bf}{res}long{sf}{txt} now {bf}{res}int{sf}
+  {txt}variable {bf}{res}unclassified_f{sf}{txt} was {bf}{res}long{sf}{txt} now {bf}{res}int{sf}
+  {txt}variable {bf}{res}__000011{sf}{txt} was {bf}{res}long{sf}{txt} now {bf}{res}byte{sf}
+  {txt}variable {bf}{res}district{sf}{txt} was {bf}{res}str39{sf}{txt} now {bf}{res}str28{sf}
+{txt}  (58,464 bytes saved)
+
+{com}.         save "../08_temp/census2011_sc_edu_data", replace
+{txt}{p 0 4 2}
+file {bf}
+../08_temp/census2011_sc_edu_data.dta{rm}
+saved
+{p_end}
+
+{com}.         
+.         
+. 
+. 
+. project , creates("../08_temp/census2011_overall_edu_data.dta") 
+{txt}project version2_tribe_language > do-file creates: {res}"08_temp/census2011_overall_edu_data.dta" filesig(1980474:587538){txt}
+
+{com}. project , creates("../08_temp/census2011_sc_edu_data.dta")      
+{txt}project version2_tribe_language > do-file creates: {res}"08_temp/census2011_sc_edu_data.dta" filesig(552711035:526413){txt}
+
+{com}.         
+.         
+.         
+. 
+. 
+. 
+{txt}end of do-file
+      name:  {res}plog_888
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/1.05c_append_combine_census2011_overall_sc_files.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}10 Nov 2021, 22:25:55
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

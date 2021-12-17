@@ -1,0 +1,911 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}plog_868
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/1.03b_append_census61_ag_religion_files.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}16 Nov 2021, 12:34:25
+{txt}
+{com}. local census_agg_61_religion_folder "../01_data/census_1961_agg_religion_tables"
+{txt}
+{com}. local st_religion_agg_61_files: dir "`census_agg_61_religion_folder'" files "??61c7religion.xlsx"  
+{txt}
+{com}. 
+. foreach file of local st_religion_agg_61_files {c -(}
+{txt}  2{com}.         project , original("`census_agg_61_religion_folder'/`file'")            
+{txt}  3{com}. {c )-} 
+{txt}project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/mp61c7religion.xlsx" filesig(2309370763:30148){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/tn61c7religion.xlsx" filesig(493861971:15650){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/hp61c7religion.xlsx" filesig(2234526236:12316){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/br61c7religion.xlsx" filesig(1101584915:20135){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/pn61c7religion.xlsx" filesig(2047334418:18329){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/as61c7religion.xlsx" filesig(1239341675:16216){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/dl61c7religion.xlsx" filesig(1787277854:11853){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/ke61c7religion.xlsx" filesig(2273540927:14555){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/kt61c7religion.xlsx" filesig(2963774190:17327){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/rj61c7religion.xlsx" filesig(2461386855:18776){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/mn61c7religion.xlsx" filesig(2131000090:13271){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/in61c7religion.xlsx" filesig(1402257859:25445){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/jk61c7religion.xlsx" filesig(4045120860:14851){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/ar61c7religion.xlsx" filesig(3333389181:11347){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/up61c7religion.xlsx" filesig(2351147438:35446){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/wb61c7religion.xlsx" filesig(4136991180:18697){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/dn61c7religion.xlsx" filesig(2902085220:10055){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/lm61c7religion.xlsx" filesig(4050695960:9633){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/ng61c7religion.xlsx" filesig(3525279457:11917){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/an61c7religion.xlsx" filesig(1039509268:10933){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/tr61c7religion.xlsx" filesig(1036714736:12944){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/or61c7religion.xlsx" filesig(1855989239:14985){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/ga61c7religion.xlsx" filesig(4051653263:16219){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/py61c7religion.xlsx" filesig(2824011139:11412){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/ap61c7religion.xlsx" filesig(3653129624:18427){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/gj61c7religion.xlsx" filesig(3183732650:17951){txt}
+project version2_tribe_language > do-file uses original: {res}"01_data/census_1961_agg_religion_tables/mh61c7religion.xlsx" filesig(212557249:23624){txt}
+
+{com}. 
+. ******************************************************************************************************
+. * 1. import and append the original excel data files
+. ******************************************************************************************************
+. 
+.         save "../08_temp/census1961_agg_religion_data", emptyok replace
+{txt}(dataset contains 0 observations)
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+
+{com}. 
+.         local states an ap as br dn gj hp ke kt mh mp mn lm ng or pn rj tn tr wb
+{txt}
+{com}. 
+.         foreach st of local states {c -(}
+{txt}  2{com}.                 capture confirm file "`census_agg_61_religion_folder'/`st'61c7religion.xlsx"
+{txt}  3{com}.                 if _rc {c -(}
+{txt}  4{com}.                         dis as error "Could not locate the religion file for state `st'."
+{txt}  5{com}.                         continue
+{txt}  6{com}.                         {c )-}
+{txt}  7{com}.                 import excel using "`census_agg_61_religion_folder'/`st'61c7religion.xlsx", firstrow case(lower) clear
+{txt}  8{com}.                 
+.                 append using "../08_temp/census1961_agg_religion_data"
+{txt}  9{com}.                 save "../08_temp/census1961_agg_religion_data", replace
+{txt} 10{com}.                 {c )-}
+{res}{text}(23 vars, 10 obs)
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+{res}{text}(24 vars, 63 obs)
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+{res}{text}(24 vars, 42 obs)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str5}, now {bf:str14} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+{res}{text}(24 vars, 66 obs)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str5}, now {bf:str14} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str15}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+{res}{text}(20 vars, 3 obs)
+{p 0 7 2}
+(variable
+{bf:total_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:total_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:buddhists_m} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:buddhists_f} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:christians_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:christians_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:hindus_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:hindus_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:jains_m} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:jains_f} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:muslims_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:muslims_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:other_religions_m} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:other_religions_f} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:union_territory} was {bf:str22}, now {bf:str25} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+{res}{text}(24 vars, 58 obs)
+{p 0 7 2}
+(variable
+{bf:other_religions_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:other_religions_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str7}, now {bf:str14} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:division} was {bf:str15}, now {bf:str21} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str13}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:religion_not_stated_m} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:religion_not_stated_f} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+{res}{text}(23 vars, 21 obs)
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str11}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:christians_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:christians_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:jains_m} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:jains_f} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:muslims_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:muslims_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:other_religions_m} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:other_religions_f} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:religion_not_stated_m} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:religion_not_stated_f} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+{res}{text}(23 vars, 30 obs)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str6}, now {bf:str16} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str10}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:buddhists_f} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:jains_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:jains_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:other_religions_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:other_religions_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+{res}{text}(23 vars, 60 obs)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str6}, now {bf:str16} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str15}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:other_religions_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:other_religions_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:religion_not_stated_m} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:religion_not_stated_f} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+{res}{text}(24 vars, 92 obs)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str11}, now {bf:str16} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str14}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:division} was {bf:str19}, now {bf:str21} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+{res}{text}(24 vars, 153 obs)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str14}, now {bf:str16} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:division} was {bf:str17}, now {bf:str21} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str11}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:other_religions_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:other_religions_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+{res}{text}(21 vars, 39 obs)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str7}, now {bf:str16} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:buddhists_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:buddhists_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:jains_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:jains_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:muslims_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:muslims_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:sikhs_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+{res}{text}(12 vars, 11 obs)
+{p 0 7 2}
+(variable
+{bf:total_p} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:total_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:total_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:christians_m} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:christians_f} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:hindus_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:hindus_f} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:muslims_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:muslims_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+{res}{text}(23 vars, 12 obs)
+{p 0 7 2}
+(variable
+{bf:hindus_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:hindus_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:muslims_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:muslims_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str8}, now {bf:str16} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:buddhists_m} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:buddhists_f} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:jains_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:jains_f} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:sikhs_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:sikhs_f} was {bf:byte}, now {bf:int} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:religion_not_stated_m} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:religion_not_stated_f} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str10}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+{res}{text}(23 vars, 42 obs)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str6}, now {bf:str16} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str15}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:buddhists_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:buddhists_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:jains_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:jains_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:sikhs_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:other_religions_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:other_religions_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:religion_not_stated_m} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:religion_not_stated_f} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+{res}{text}(24 vars, 69 obs)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str6}, now {bf:str16} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str16}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:buddhists_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:buddhists_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:jains_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:jains_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:religion_not_stated_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:religion_not_stated_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:division} was {bf:str18}, now {bf:str21} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+{res}{text}(23 vars, 81 obs)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str9}, now {bf:str16} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str14}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:buddhists_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:buddhists_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:christians_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:christians_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:religion_not_stated_m} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:religion_not_stated_f} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+{res}{text}(23 vars, 42 obs)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str6}, now {bf:str16} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str15}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:buddhists_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:buddhists_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:jains_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:jains_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:sikhs_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:sikhs_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:religion_not_stated_m} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:religion_not_stated_f} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:other_religions_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:other_religions_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+{res}{text}(24 vars, 33 obs)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str7}, now {bf:str16} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:buddhists_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:buddhists_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:christians_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:christians_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:jains_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:jains_f} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:sikhs_m} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:sikhs_f} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:other_religions_m} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:other_religions_f} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:religion_not_stated_m} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:religion_not_stated_f} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+{res}{text}(24 vars, 58 obs)
+{p 0 7 2}
+(variable
+{bf:state} was {bf:str11}, now {bf:str16} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:jains_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:jains_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:sikhs_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:sikhs_f} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:religion_not_stated_m} was {bf:int}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:religion_not_stated_f} was {bf:byte}, now {bf:long} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:district} was {bf:str13}, now {bf:str34} to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(variable
+{bf:division} was {bf:str19}, now {bf:str21} to accommodate using data's values)
+{p_end}
+{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data.dta{rm}
+saved
+{p_end}
+
+{com}.                 
+. 
+. 
+. 
+. ******************************************************************************************************
+. * 2. miscellaneous clean-ups
+. ******************************************************************************************************
+.         use "../08_temp/census1961_agg_religion_data", clear 
+{txt}
+{com}.         rename other_religions_and_persuasions_ other_persuasions_m //due to invalid stata variable name error and to maintain consistency with st religion data 
+{res}{txt}
+{com}.         rename v other_persuasions_f
+{res}{txt}
+{com}.         
+.         ** in rajasthan other religions and persuasions f is called u, fixing this
+.         
+.         replace other_persuasions_f = u if state == "Rajasthan"
+{txt}(16 real changes made)
+
+{com}.         drop x u s t 
+{txt}
+{com}.         rename code dcode_1961
+{res}{txt}
+{com}.         keep if !missing(dcode_1961) //retaining only districts 
+{txt}(128 observations deleted)
+
+{com}.         
+.         ** for A&N, Tripura, Dadra & Nagar Haveli, Lakshadweep we need to create a new "district" [same as the state]
+.         expand 2 if inlist(dcode_1961,602700,602400,602900,603200), gen(dist_obs)
+{txt}(10 observations created)
+
+{com}.         replace dcode_1961 = dcode_1961 + 1 if dist_obs 
+{txt}(10 real changes made)
+
+{com}.         drop dist_obs
+{txt}
+{com}.         
+.         order dcode_1961 state union_territory islands division district total_rural_urban
+{txt}
+{com}.         drop if total_rural_urban == "total"
+{txt}(288 observations deleted)
+
+{com}.         drop division sub_division
+{txt}
+{com}.         
+.         foreach var of varlist total_p *_m *_f {c -(}
+{txt}  2{com}.                 replace `var' = 0 if missing(`var')
+{txt}  3{com}.                 rename `var' agg_`var'
+{txt}  4{com}.         {c )-}
+{txt}(14 real changes made)
+{res}{txt}(14 real changes made)
+{res}{txt}(153 real changes made)
+{res}{txt}(15 real changes made)
+{res}{txt}(14 real changes made)
+{res}{txt}(44 real changes made)
+{res}{txt}(16 real changes made)
+{res}{txt}(32 real changes made)
+{res}{txt}(539 real changes made)
+{res}{txt}(381 real changes made)
+{res}{txt}(314 real changes made)
+{res}{txt}(14 real changes made)
+{res}{txt}(204 real changes made)
+{res}{txt}(19 real changes made)
+{res}{txt}(14 real changes made)
+{res}{txt}(77 real changes made)
+{res}{txt}(18 real changes made)
+{res}{txt}(70 real changes made)
+{res}{txt}(544 real changes made)
+{res}{txt}(453 real changes made)
+{res}{txt}(323 real changes made)
+{res}{txt}
+{com}.         
+.         * these were areas where either STs were not delimited in 1961, or the full census was not conducted, or no STs were present in 1961
+.         drop if inlist(state,"Delhi","Goa, Daman and Diu", "Jammu & Kashmir", "North East Frontier Agency", ///
+>                                         "Pondicherry", "Sikkim", "Uttar Pradesh") | ///
+>                                         inlist(district,"Akola","Bhandara","Buldhana","Nagpur","Wardha","Damoh","Sagar") ///
+>                                         
+{txt}(14 observations deleted)
+
+{com}.         drop if state == "Punjab" & !inlist(district,"total","Lahaul and Spiti")
+{txt}(36 observations deleted)
+
+{com}.                 
+.         drop if agg_total_p == 0
+{txt}(14 observations deleted)
+
+{com}.         
+.         rename total_rural_urban area
+{res}{txt}
+{com}.         keep dcode_1961 state district area agg_*
+{txt}
+{com}.         
+.         
+.         save "../08_temp/census1961_agg_religion_data_distcoded" , replace
+{txt}{p 0 4 2}
+file {bf}
+../08_temp/census1961_agg_religion_data_distcoded.dta{rm}
+saved
+{p_end}
+
+{com}.         
+. project , creates("../08_temp/census1961_agg_religion_data.dta")
+{txt}project version2_tribe_language > do-file creates: {res}"08_temp/census1961_agg_religion_data.dta" filesig(1787085716:288265){txt}
+
+{com}. project , creates("../08_temp/census1961_agg_religion_data_distcoded.dta")      
+{txt}project version2_tribe_language > do-file creates: {res}"08_temp/census1961_agg_religion_data_distcoded.dta" filesig(2978714029:88140){txt}
+
+{com}.         
+.         
+.         
+. 
+{txt}end of do-file
+      name:  {res}plog_868
+       {txt}log:  {res}/Users/sreyamajumder/Dropbox/sreya_majumder/tribelanguage_2020 sreya/02_scripts/1.03b_append_census61_ag_religion_files.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}16 Nov 2021, 12:34:27
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

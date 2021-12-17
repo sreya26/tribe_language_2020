@@ -50,19 +50,42 @@ project , uses("../08_temp/regions6113_with_dists_1961.dta")
 
 ************************************************************************************************************************
 * 5. now to aggregate the data to consistent 1961-2013 regions
+** note: we need to be careful while treating the agg_religions variables since they are unique to dcode_1961, and do not change with castegroups
 ************************************************************************************************************************
 
 	replace state_1961 = "Himachal Pradesh" if state_1961 == "Punjab" // we'll only be using the part of Punjab that went to Himachal
+	
+	preserve 
+		keep dcode_1961 area agg_* 
+		duplicates drop 
+		collapse (sum) agg_* , by(dcode_1961)
+		tempfile aggregate_relg
+		save `aggregate_relg'
+	restore
+	
 
+	collapse (sum) total_m-indefinite_belief_f, by(dcode_1961 castegroup_1961_2011_code)
+	merge m:1 dcode_1961 using `aggregate_relg' , assert(match) nogen 
+	
 	merge m:1 dcode_1961 using "../08_temp/regions6113_with_dists_1961", ///
 			keepusing(region6113 regionname6113) assert(match using) keep(match) nogen
 	* there will be many regions in which STs were not delimited and will thus not merge; we drop those
 	
-	collapse (sum) total_m-agg_other_religions_f, by(state_1961 region6113 regionname6113 castegroup_1961_2011_code castegroup_1961_2011 tribe)
+	preserve 
+		keep dcode_1961 region6113 agg_* 
+		duplicates drop 
+		collapse (sum) agg_* , by(region6113)
+		tempfile aggregate_region
+		save `aggregate_region'
+	restore
+	
+
+	collapse (sum) total_m-indefinite_belief_f, by(region6113 regionname6113 castegroup_1961_2011_code)
+	merge m:1 region6113 using `aggregate_region'
 	
 	
 	
-	order state_1961 regionname6113 region6113 castegroup_1961_2011_code
+	order regionname6113 region6113 castegroup_1961_2011_code
 
 	save "../08_temp/census1961_st_edu_religion_with_dist_tribe_codes", replace
 
